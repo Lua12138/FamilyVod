@@ -11,3 +11,4 @@ Build in Delphi XE 8
 * [PasLibVlc](http://prog.olsztyn.pl/paslibvlc/)
 * [CnPack/CnDebug](http://www.cnpack.org/)
 * [SUI Mobile](http://m.sui.taobao.org/)
+* [ZXing QRCode](http://www.debenu.com/)
