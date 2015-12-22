@@ -8,13 +8,13 @@ uses
 type
   TGlobalConfiguration = class
   private
-    appBaseUrl: string;
-    appWebRoot: string;
-    appVlcRoot: string;
-    appYoutubedlRoot: string;
-    appIniRoot: string;
-    appPythonRoot:string;
-    ini: TIniFile;
+    FBaseUrl: string;
+    FWebRoot: string;
+    FVlcRoot: string;
+    FYoutubedlRoot: string;
+    FIniRoot: string;
+    FPythonRoot:string;
+    FIni: TIniFile;
     constructor realConstructor;
     const
       iniSelection = 'GlobalConfiguration';
@@ -29,11 +29,11 @@ type
     class function getInstance: TGlobalConfiguration; static;
     constructor Create(NoUse: Byte);
     //procedure DoNothing; virtual; abstract;
-    property baseUrl: string read appBaseUrl;
-    property webRoot: string read appWebRoot;
-    property vlcRoot: string read appVlcRoot;
-    property youtubedlRoot: string read appYoutubedlRoot;
-    property pythonRoot:string read appPythonRoot;
+    property baseUrl: string read FBaseUrl;
+    property webRoot: string read FWebRoot;
+    property vlcRoot: string read FVlcRoot;
+    property youtubedlRoot: string read FYoutubedlRoot;
+    property pythonRoot:string read FPythonRoot;
     const
       sss = 'sss';
   end;
@@ -63,27 +63,27 @@ end;
 constructor TGlobalConfiguration.realConstructor;
 begin
   // set default values
-  Self.appBaseUrl := ExtractFilePath(Application.ExeName);
-  Self.appWebRoot := Self.relativePath('dependce/web');
-  Self.appVlcRoot := Self.relativePath('dependce/vlc');
-  Self.appYoutubedlRoot := Self.relativePath('dependce/youtube-dl.exe');
-  Self.appPythonRoot:=Self.relativePath('dependce/python/python.exe');
+  Self.FBaseUrl := ExtractFilePath(Application.ExeName);
+  Self.FWebRoot := Self.relativePath('dependce/web');
+  Self.FVlcRoot := Self.relativePath('dependce/vlc');
+  Self.FYoutubedlRoot := Self.relativePath('dependce/youtube-dl.exe');
+  Self.FPythonRoot:=Self.relativePath('dependce/python/python.exe');
   //read ini file
-  Self.appIniRoot := Self.relativePath('dependce/configuration.bmp');
-  ini := TIniFile.Create(Self.appIniRoot);
+  Self.FIniRoot := Self.relativePath('dependce/configuration.bmp');
+  FIni := TIniFile.Create(Self.FIniRoot);
 
-  Self.appWebRoot := ini.ReadString(Self.iniSelection, 'webRoot', Self.appWebRoot);
-  Self.appVlcRoot := ini.ReadString(Self.iniSelection, 'vlcRoot', Self.appVlcRoot);
-  Self.appYoutubedlRoot := ini.ReadString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
+  Self.FWebRoot := FIni.ReadString(Self.iniSelection, 'webRoot', Self.FWebRoot);
+  Self.FVlcRoot := FIni.ReadString(Self.iniSelection, 'vlcRoot', Self.FVlcRoot);
+  Self.FYoutubedlRoot := FIni.ReadString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
 
 end;
 
 procedure TGlobalConfiguration.save;
 begin
   try
-    ini.WriteString(Self.iniSelection, 'webRoot', Self.appWebRoot);
-    ini.WriteString(Self.iniSelection, 'vlcRoot', Self.appVlcRoot);
-    ini.WriteString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
+    FIni.WriteString(Self.iniSelection, 'webRoot', Self.FWebRoot);
+    FIni.WriteString(Self.iniSelection, 'vlcRoot', Self.FVlcRoot);
+    FIni.WriteString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
   except
     on E: Exception do
     begin

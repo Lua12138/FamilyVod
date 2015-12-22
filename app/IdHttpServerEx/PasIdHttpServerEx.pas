@@ -9,7 +9,7 @@ uses
 type
   TIdHttpServerEx = class(TIdHTTPServer)
   protected
-    processorLinkList: TObjectList<TRequestProcessor>;
+    FChainList: TObjectList<TRequestProcessor>;
     procedure commandDispatcher(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure DoCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo); override;
     procedure DoCommandOther(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo); override;
@@ -33,12 +33,12 @@ constructor TIdHttpServerEx.Create;
 begin
   inherited Create;
   //Self.processorLinkList := TObjectDictionary<TRequestProcessor, Integer>.Create();
-  Self.processorLinkList := TObjectList<TRequestProcessor>.Create();
+  Self.FChainList := TObjectList<TRequestProcessor>.Create();
 end;
 
 destructor TIdHttpServerEx.Destroy;
 begin
-  Self.processorLinkList.Free;
+  Self.FChainList.Free;
   inherited;
 end;
 {*------------------------------------------------------------------------------
@@ -61,9 +61,9 @@ begin
   end;
 
   //for pro in Self.processorLinkList.Keys do
-  for step := 0 to Self.processorLinkList.Count - 1 do
+  for step := 0 to Self.FChainList.Count - 1 do
   begin
-    pro := Self.processorLinkList.Items[step];
+    pro := Self.FChainList.Items[step];
     if pro.ClassName.Equals(processor.ClassName) then
     begin
       CnDebugger.TraceMsg('Processor exsit');
@@ -80,7 +80,7 @@ begin
   //
   if processor <> nil then
   begin
-    Self.processorLinkList.Add(processor);
+    Self.FChainList.Add(processor);
     CnDebugger.TraceMsg('Register:' + processor.ClassName);
     Result := True;
   end
@@ -112,9 +112,9 @@ begin
   CnDebugger.TraceEnter('removeProcessor', Self.ClassName);
   CnDebugger.TraceMsg('remove:' + processorClassName);
   //for pro in Self.processorLinkList.Keys do
-  for step := 0 to Self.processorLinkList.Count - 1 do
+  for step := 0 to Self.FChainList.Count - 1 do
   begin
-    pro := Self.processorLinkList.Items[step];
+    pro := Self.FChainList.Items[step];
     if pro.ClassName.Equals(processorClassName) then
     begin
       CnDebugger.TraceMsg('Find Processor');
@@ -125,7 +125,7 @@ begin
 
   if (pro <> nil) and pro.ClassName.Equals(processorClassName) then
   begin
-    Self.processorLinkList.Remove(pro);
+    Self.FChainList.Remove(pro);
     FreeAndNil(pro);
     Result := True;
   end
@@ -146,7 +146,7 @@ begin
   uri := ARequestInfo.uri;
   action := ARequestInfo.Params.Values['action'];
   // ±éÀú
-  for eachProcessor in Self.processorLinkList do
+  for eachProcessor in Self.FChainList do
   begin
     if eachProcessor.requested(uri, action) then
     begin
@@ -173,13 +173,13 @@ var
   processor: TRequestProcessor;
 begin
   // release processor
-  for processor in Self.processorLinkList do
+  for processor in Self.FChainList do
   begin
-    Self.processorLinkList.Remove(processor);
+    Self.FChainList.Remove(processor);
     processor.Free;
   end;
   // release list
-  Self.processorLinkList.Free;
+  Self.FChainList.Free;
   inherited Free;
 end;
 

@@ -19,8 +19,8 @@ uses
   PasVideoTransferProcessor in 'IdHttpServerEx\PasVideoTransferProcessor.pas',
   PasWebSrvProcessor in 'IdHttpServerEx\PasWebSrvProcessor.pas',
   PasUpdateProcessor in 'IdHttpServerEx\PasUpdateProcessor.pas',
-  PasLibVlcPlayerEx in 'LibVlcEx\PasLibVlcPlayerEx.pas',
-  PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas';
+  PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas',
+  PasLibVlcMediaMeta in 'LibVlcEx\PasLibVlcMediaMeta.pas';
 
 {$R *.res}
 
