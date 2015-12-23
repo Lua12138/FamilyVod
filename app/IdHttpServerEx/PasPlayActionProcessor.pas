@@ -8,21 +8,26 @@ uses
 type
   TPlayActionProcessor = class(TRequestProcessor)
   protected
-    function innerRequested(requestUri: string; requestAction: string): Boolean; override;
-    function onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean; override;
+    function innerRequested(requestUri: string; requestAction: string)
+      : Boolean; override;
+    function onGet(requestInfo: TIdHTTPRequestInfo;
+      responseInfo: TIdHTTPResponseInfo): Boolean; override;
   end;
 
 implementation
 
 uses
-  CnDebug, PasMessagerHelper, PasGlobalConfiguration, Winapi.Windows, EncdDecd;
+  CnDebug, PasMessagerHelper, PasGlobalConfiguration, Winapi.Windows, EncdDecd,
+  System.JSON;
 
-function TPlayActionProcessor.innerRequested(requestUri: string; requestAction: string): Boolean;
+function TPlayActionProcessor.innerRequested(requestUri: string;
+  requestAction: string): Boolean;
 begin
-  Result := 'play'.Equals(requestaction)
+  Result := 'play'.Equals(requestAction)
 end;
 
-function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean;
+function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo;
+  responseInfo: TIdHTTPResponseInfo): Boolean;
 
   function RunDosCommand(Command: string): string;
   const
@@ -33,10 +38,10 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInf
     SI: TStartupInfo;
     PI: TProcessInformation;
     sa: TSecurityAttributes;
-  // SD   :   TSecurityDescriptor;
+    // SD   :   TSecurityDescriptor;
     BytesRead: DWORD;
-    Dest: array[0..ArrayMaxLength] of AnsiChar;
-    CmdLine: array[0..512] of Char;
+    Dest: array [0 .. ArrayMaxLength] of AnsiChar;
+    CmdLine: array [0 .. 512] of Char;
     Avail, ExitCode, wrResult: DWORD;
     osVer: TOSVERSIONINFO;
     tmpstr: AnsiString;
@@ -47,8 +52,6 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInf
 
     if osVer.dwPlatformId = VER_PLATFORM_WIN32_NT then
     begin
-    // InitializeSecurityDescriptor(@SD,   SECURITY_DESCRIPTOR_REVISION);
-    // SetSecurityDescriptorDacl(@SD,   True,   nil,   False);
       sa.nLength := sizeof(sa);
       sa.lpSecurityDescriptor := nil; // @SD;
       sa.bInheritHandle := True;
@@ -65,14 +68,16 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInf
       SI.hStdOutput := hWritePipe;
       SI.hStdError := hWritePipe;
       StrPCopy(CmdLine, Command);
-      if CreateProcess(nil, CmdLine, nil, nil, True, NORMAL_PRIORITY_CLASS, nil, nil, SI, PI) then
+      if CreateProcess(nil, CmdLine, nil, nil, True, NORMAL_PRIORITY_CLASS, nil,
+        nil, SI, PI) then
       begin
         ExitCode := 0;
         while ExitCode = 0 do
         begin
           wrResult := WaitForSingleObject(PI.hProcess, 500);
-        // if   PeekNamedPipe(hReadPipe,   nil,   0,   nil,   @Avail,   nil)   then
-          if PeekNamedPipe(hReadPipe, @Dest[0], ArrayMaxLength, @Avail, nil, nil) then
+
+          if PeekNamedPipe(hReadPipe, @Dest[0], ArrayMaxLength, @Avail, nil, nil)
+          then
           begin
             if Avail > 0 then
             begin
@@ -80,7 +85,6 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInf
                 FillChar(Dest, sizeof(Dest), 0);
                 ReadFile(hReadPipe, Dest[0], Avail, BytesRead, nil);
                 tmpstr := Copy(Dest, 0, BytesRead - 1);
-                ;
                 Result := Result + tmpstr;
               finally
               end;
@@ -136,7 +140,7 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInf
             begin
               intI := intK;
               strString := strString + strsearchSubStr;
-              break; // 不匹配 退出FOR
+              Break; // 不匹配 退出FOR
             end;
           end;
           if (intJ = SubStringSize) or (SubStringSize = 1) then
@@ -172,10 +176,11 @@ var
   url: string;
   execYoutubedl: string;
   youtubedlResponse: string;
-  spliter: tstringlist;
+  spliter: TStringList;
   localPlayUrl: string;
   i: Integer;
   httpResponse: string;
+  JSON: TJSONObject;
 begin
   url := requestInfo.Params.Values['url'];
   if EmptyStr.Equals(url) then
@@ -195,16 +200,17 @@ begin
     end;
 
     // youtube-dl 命令行
-    execYoutubedl := Format('%s -j "%s"', [tglobalconfiguration.getInstance.youtubedlRoot, url]);
+    execYoutubedl := Format('%s -j "%s"',
+      [tglobalconfiguration.getInstance.youtubedlRoot, url]);
 
     CnDebugger.TraceMsg('exec:' + execYoutubedl);
-      // 耗时可能较长
+    // 耗时可能较长
     youtubedlResponse := RunDosCommand(execYoutubedl);
 
     CnDebugger.TraceMsg('Youtube-dl Response:' + youtubedlResponse);
 
     spliter := SplitString(PChar(youtubedlResponse), #10);
-      // 判断是否执行失败
+    // 判断是否执行失败
     try
       for i := 0 to spliter.Count - 1 do
       begin
@@ -212,11 +218,12 @@ begin
           CnDebugger.TraceMsg('[TestTag] Response Error');
         if Pos('ERROR', spliter.Strings[i]) = 0 then // 没有错误
         begin
-          CnDebugger.TraceMsg(Format('Response %d of %d : %s', [i, spliter.Count, spliter.Strings[i]]));
-          localPlayUrl := '?action=vlc&base64=' + EncdDecd.EncodeString(spliter.Strings[i]).Replace(#10, '').Replace(#13, '');
+          CnDebugger.TraceMsg(Format('Response %d of %d : %s',
+            [i, spliter.Count, spliter.Strings[i]]));
+
+          TMessagerHelper.sendMessage(FM_PLAY, spliter.Strings[i]);
           CnDebugger.TraceMsg('add item:' + localPlayUrl);
           TMessagerHelper.postMessage(FM_FULL_SCREEN, 0);
-          TMessagerHelper.sendMessage(FM_PLAY, localPlayUrl);
           httpResponse := '已加入播放列表';
         end
         else
@@ -228,7 +235,6 @@ begin
             TMessagerHelper.sendMessage(FM_SPEAK, '点播失败，请再次尝试，可能是不支持该视频');
           Break;
         end;
-          // player.Play(responseContent);
       end;
     except
       on E: Exception do
@@ -252,4 +258,3 @@ begin
 end;
 
 end.
-

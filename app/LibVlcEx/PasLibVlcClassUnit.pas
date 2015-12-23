@@ -639,7 +639,6 @@ end;
 procedure TPasLibVlcMedia.SetMeta(meta: libvlc_meta_t; value: WideString);
 begin
   libvlc_media_set_meta(FMD, meta, PAnsiChar(UTF8Encode(value)));
-  //libvlc_media_set_meta(FMD, meta, PAnsiChar(AnsiString((value))));   // FORDREAM XXX
 end;
 
 procedure TPasLibVlcMedia.SaveMeta();

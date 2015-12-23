@@ -8,8 +8,10 @@ uses
 type
   TPlayControlProcessor = class(TRequestProcessor)
   protected
-    function innerRequested(requestUri: string; requestAction: string): Boolean; override;
-    function onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean; override;
+    function innerRequested(requestUri: string; requestAction: string)
+      : Boolean; override;
+    function onGet(requestInfo: TIdHTTPRequestInfo;
+      responseInfo: TIdHTTPResponseInfo): Boolean; override;
   end;
 
 implementation
@@ -17,7 +19,8 @@ implementation
 uses
   PasMessagerHelper;
 
-function TPlayControlProcessor.innerRequested(requestUri: string; requestAction: string): Boolean;
+function TPlayControlProcessor.innerRequested(requestUri: string;
+  requestAction: string): Boolean;
 begin
   if 'pause'.Equals(requestAction) then
     Result := True
@@ -25,12 +28,15 @@ begin
     Result := True
   else if 'next'.Equals(requestAction) then
     Result := True
+  else if 'close'.Equals(requestAction) then // for test
+    Result := True
   else
     Result := False;
 
 end;
 
-function TPlayControlProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean;
+function TPlayControlProcessor.onGet(requestInfo: TIdHTTPRequestInfo;
+  responseInfo: TIdHTTPResponseInfo): Boolean;
 var
   requestAction: string;
 begin
@@ -40,10 +46,13 @@ begin
   else if 'stop'.Equals(requestAction) then
     tmessagerhelper.postMessage(fm_stop, 0)
   else if 'next'.Equals(requestAction) then
-    tmessagerhelper.postMessage(fm_next, 0);
-
+    tmessagerhelper.postMessage(fm_next, 0)
+{$IFDEF DEBUG}
+  else if 'close'.Equals(requestAction) then
+    tmessagerhelper.postMessage(fm_close_app, 0);
+{$ENDIF}
+  ;
   Result := True;
 end;
 
 end.
-
