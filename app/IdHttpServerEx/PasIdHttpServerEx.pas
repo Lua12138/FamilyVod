@@ -142,7 +142,7 @@ var
   eachProcessor: TRequestProcessor;
   uri, action: string;
 begin
-  CnDebugger.TraceEnter('commandDispatcher', Self.ClassName);
+  CnDebugger.TraceMsgWithTag('Enter:CommandDispatcher', Self.ClassName);
   uri := ARequestInfo.uri;
   action := ARequestInfo.Params.Values['action'];
   // ±éÀú
@@ -155,7 +155,7 @@ begin
         Break;
     end;
   end;
-  CnDebugger.TraceLeave('commandDispatcher', Self.ClassName);
+  CnDebugger.TraceMsgWithTag('Leave:CommandDispatcher', Self.ClassName);
 end;
 
 procedure TIdHttpServerEx.DoCommandGet(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
@@ -176,7 +176,7 @@ begin
   for processor in Self.FChainList do
   begin
     Self.FChainList.Remove(processor);
-    processor.Free;
+    //processor.Free;
   end;
   // release list
   Self.FChainList.Free;
