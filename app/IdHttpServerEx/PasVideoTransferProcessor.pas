@@ -86,6 +86,7 @@ begin
       end;
     end;
   finally
+    objJson.free;
     http.Free;
   end;
   Result := True;

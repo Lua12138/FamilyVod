@@ -13,13 +13,13 @@ type
     FVlcRoot: string;
     FYoutubedlRoot: string;
     FIniRoot: string;
-    FPythonRoot:string;
+    FPythonRoot: string;
     FIni: TIniFile;
     constructor realConstructor;
-    const
-      iniSelection = 'GlobalConfiguration';
-    class var
-      instance: TGlobalConfiguration;
+
+  const
+    iniSelection = 'GlobalConfiguration';
+    class var instance: TGlobalConfiguration;
   protected
   public
     // 获得相对于程序路径的url
@@ -28,14 +28,13 @@ type
     procedure save;
     class function getInstance: TGlobalConfiguration; static;
     constructor Create(NoUse: Byte);
-    //procedure DoNothing; virtual; abstract;
+    // procedure DoNothing; virtual; abstract;
     property baseUrl: string read FBaseUrl;
     property webRoot: string read FWebRoot;
     property vlcRoot: string read FVlcRoot;
     property youtubedlRoot: string read FYoutubedlRoot;
-    property pythonRoot:string read FPythonRoot;
-    const
-      sss = 'sss';
+    property pythonRoot: string read FPythonRoot;
+    procedure Free;
   end;
 
 implementation
@@ -67,14 +66,15 @@ begin
   Self.FWebRoot := Self.relativePath('dependce/web');
   Self.FVlcRoot := Self.relativePath('dependce/vlc');
   Self.FYoutubedlRoot := Self.relativePath('dependce/youtube-dl.exe');
-  Self.FPythonRoot:=Self.relativePath('dependce/python/python.exe');
-  //read ini file
+  Self.FPythonRoot := Self.relativePath('dependce/python/python.exe');
+  // read ini file
   Self.FIniRoot := Self.relativePath('dependce/configuration.bmp');
   FIni := TIniFile.Create(Self.FIniRoot);
 
   Self.FWebRoot := FIni.ReadString(Self.iniSelection, 'webRoot', Self.FWebRoot);
   Self.FVlcRoot := FIni.ReadString(Self.iniSelection, 'vlcRoot', Self.FVlcRoot);
-  Self.FYoutubedlRoot := FIni.ReadString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
+  Self.FYoutubedlRoot := FIni.ReadString(Self.iniSelection, 'youtubedlRoot',
+    Self.youtubedlRoot);
 
 end;
 
@@ -83,12 +83,12 @@ begin
   try
     FIni.WriteString(Self.iniSelection, 'webRoot', Self.FWebRoot);
     FIni.WriteString(Self.iniSelection, 'vlcRoot', Self.FVlcRoot);
-    FIni.WriteString(Self.iniselection, 'youtubedlRoot', Self.youtubedlRoot);
+    FIni.WriteString(Self.iniSelection, 'youtubedlRoot', Self.youtubedlRoot);
   except
     on E: Exception do
     begin
-      CnDebugger.TraceMsg('Save Err:' + e.ClassName);
-      CnDebugger.TraceMsg('Message:' + e.Message);
+      CnDebugger.TraceMsg('Save Err:' + E.ClassName);
+      CnDebugger.TraceMsg('Message:' + E.Message);
       CnDebugger.TraceMsg(E.StackTrace);
     end;
   end;
@@ -104,5 +104,13 @@ begin
   Result := Self.baseUrl + path;
 end;
 
-end.
+procedure TGlobalConfiguration.Free;
+begin
+  if TGlobalConfiguration.instance <> nil then
+  begin
+    TGlobalConfiguration.instance.FIni.Free;
+    FreeAndNil(TGlobalConfiguration.instance);
+  end;
+end;
 
+end.

@@ -2,12 +2,12 @@ program Project1;
 
 uses
   Vcl.Forms,
-  PasMainForm in 'PasMainForm.pas' {frmMain},
+  PasMainForm in 'PasMainForm.pas' {frmMain} ,
   PasLibVlcClassUnit in 'LibVlcEx\PasLibVlcClassUnit.pas',
   PasLibVlcPlayerUnit in 'LibVlcEx\PasLibVlcPlayerUnit.pas',
   PasLibVlcUnit in 'LibVlcEx\PasLibVlcUnit.pas',
   CnDebug in 'CnDebug\CnDebug.pas',
-  CnPropSheetFrm in 'CnDebug\CnPropSheetFrm.pas' {CnPropSheetForm},
+  CnPropSheetFrm in 'CnDebug\CnPropSheetFrm.pas' {CnPropSheetForm} ,
   PasQrCode in 'Util\PasQrCode.pas',
   PasCrcHelper in 'Util\PasCrcHelper.pas',
   PasGlobalConfiguration in 'Util\PasGlobalConfiguration.pas',
@@ -20,11 +20,14 @@ uses
   PasWebSrvProcessor in 'IdHttpServerEx\PasWebSrvProcessor.pas',
   PasUpdateProcessor in 'IdHttpServerEx\PasUpdateProcessor.pas',
   PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas',
-  PasLibVlcMediaMeta in 'LibVlcEx\PasLibVlcMediaMeta.pas';
+  PasLibVlcMediaMeta in 'LibVlcEx\PasLibVlcMediaMeta.pas',
+  PasPlayerListProcessor in 'IdHttpServerEx\PasPlayerListProcessor.pas',
+  PasLibVlcUserData in 'LibVlcEx\PasLibVlcUserData.pas';
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := Boolean(DebugHook);
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmMain, frmMain);
