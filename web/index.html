@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>SUI 内容内建页</title>
-	<link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.5.4/css/sm.min.css">
+	<link rel="stylesheet" href="sui/sm.min.css">
     <link rel="stylesheet" href="sui/sm-extend.css">
     <style type="text/css">
         .infinite-scroll-preloader {
@@ -87,7 +87,7 @@
     <div class="content">
         <div class="list-block media-list">
             <ul id="albumList">
-				<!--
+                <!--
                 <li>
                     <a href="#" class="item-link item-content" data-link="">
                         <div class="item-media"><img
@@ -103,13 +103,28 @@
                         </div>
                     </a>
                 </li>
-				-->
+                -->
             </ul>
         </div>
     </div>
 </div>
+
+<!-- 播放列表弹出窗口 -->
+<div class="popup popup-playlist">
+
+	<header class="bar bar-nav">
+		<a class="icon icon-left pull-left" onclick="$.closeModal();"></a>
+		<h1 class="title">当前播放列表</h1>
+	</header>
+
+	<div class="list-block">
+		<ul id="playlist"></ul>
+	</div>
+</div>
+
 <!-- popup, panel 等放在这里 -->
-<div class="panel-overlay"></div>
+<div class="panel-overlay">
+</div>
 <!-- Left Panel with Reveal effect -->
 <div class="panel panel-left panel-reveal">
     <div class="content-block">
@@ -130,6 +145,13 @@
             </a>
         </div>
         <div class="card">
+            <a href="#" onclick="Events.playlistClick()">
+                <div class="card-content">
+                    <div class="card-content-inner">播放列表</div>
+                </div>
+            </a>
+        </div>
+        <div class="card">
             <a href="#" onclick="Events.stopPlayClick()">
                 <div class="card-content">
                     <div class="card-content-inner">终止播放</div>
@@ -145,9 +167,9 @@
 <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.5.4/js/sm.min.js' charset='utf-8'></script>
 <script type='text/javascript' src='//g.alicdn.com/msui/sm/0.5.4/js/sm-extend.min.js' charset='utf-8'></script>
 -->
-    <script type='text/javascript' src='sui/zepto.js' charset='utf-8'></script>
-    <script type='text/javascript' src='sui/sm.js' charset='utf-8'></script>
-    <script type='text/javascript' src='sui/sm-extend.js' charset='utf-8'></script>
+<script type='text/javascript' src='sui/zepto.js' charset='utf-8'></script>
+<script type='text/javascript' src='sui/sm.js' charset='utf-8'></script>
+<script type='text/javascript' src='sui/sm-extend.js' charset='utf-8'></script>
 <script type="text/javascript">
     var Events = {
         /* 图片加载失败时，采用本地服务器转换请求 */
@@ -157,7 +179,7 @@
             this.dataset.err = true;
             var image = this;
             console.log("err load:" + this.src);
-			this.src = "services/browser/img?url=" + this.src;
+            this.src = "services/browser/img?url=" + this.src;
             //$.get("services/browser/img", {url: this.src}, function (data) {
             //    image.src = data;
             //});
@@ -200,11 +222,15 @@
         /*详细页专辑视频单击*/
         albumItemVideoClick: function (event) {
             console.log(event.data.url);
-            Functions.sendMessage({action: "play", url: event.data.url, videoTitle: event.data.title}, function (response) {
-				console.log("Vod Event Response");
-				console.log(response);
+            Functions.sendMessage({
+                action: "play",
+                url: event.data.url,
+                videoTitle: event.data.title
+            }, function (response) {
+                console.log("Vod Event Response");
+                console.log(response);
                 if (response) {
-                    $.toast("成功加入到播放列表中...");
+                    $.toast(response.responseText);
                 } else {
                     $.toast("请求点播失败，此为系统错误，将长期存在")
                 }
@@ -213,10 +239,10 @@
         // 继续播放单击
         resumePlayClick: function () {
             Functions.sendMessage({action: "play"}, function (response) {
-				console.log("Play Event Response");
-				console.log(response);
+                console.log("Play Event Response");
+                console.log(response);
                 if (response)
-                    $.toast("即将开始播放...");
+                    $.toast(response.responseText);
                 else
                     $.toast("请求继续播放失败，此为系统错误，将长期存在");
             });
@@ -224,20 +250,63 @@
         // 暂停播放单击
         pausePlayClick: function () {
             Functions.sendMessage({action: "pause"}, function (response) {
-				console.log("Pause Event Response");
-				console.log(response);
+                console.log("Pause Event Response");
+                console.log(response);
                 if (response)
-                    $.toast("即将暂停...")
+                    $.toast(response.responseText)
                 else
                     $.toast("请求暂停播放失败，此为系统错误，将长期存在");
             });
         },
+        // 显示播放列表
+        playlistClick: function () {
+            Functions.sendMessage({action: "showList"}, function (response) {
+                Elements.playlistUl.html("");
+				response = JSON.parse(response.responseText);
+				console.log(response);
+                for (var index in response) {
+                    var id = response[index].id;
+                    var title = response[index].title;
+                    var playstatus = response[index].playstatus;
+                    var itemContent = $("<li>", {class: "item-content"});
+                    var itemMedia = $("<div>", {class: "item-media"});
+					var img;
+
+                    var itemInner = $("<div>", {class: "item-inner"});
+                    var itemTitle = $("<div>", {class: "item-title", text: title});
+                    var itemAfter;
+
+					if (playstatus == 4){
+						img = $("<img>", {src: "res/ps-played.png"});
+						itemAfter = $("<div>", {class: "item-after", text: "已播放"});
+					} else if (playstatus == 1){
+						img = $("<img>", {src: "res/ps-playing.png"});
+						itemAfter = $("<div>", {class: "item-after", text: "正在播放"});
+					} else {
+						img = $("<img>", {src: "res/ps-wait-play.png"});
+						itemAfter = $("<div>", {class: "item-after", text: "未播放"});
+					}
+
+					img.attr({style:"width:1rem"});
+					img.appendTo(itemMedia);
+					
+                    itemTitle.appendTo(itemInner);
+                    itemAfter.appendTo(itemInner);
+					itemMedia.appendTo(itemContent);
+                    itemInner.appendTo(itemContent);
+
+                    itemContent.appendTo(Elements.playlistUl);
+                }
+                $.popup(".popup-playlist");
+
+            });
+        },
         stopPlayClick: function () {
             Functions.sendMessage({action: "stop"}, function (response) {
-				console.log("Stop Event Response");
-				console.log(response);
+                console.log("Stop Event Response");
+                console.log(response);
                 if (response)
-                    $.toast("即将终止播放...");
+                    $.toast(response.responseText);
                 else
                     $.toast("请求终止播放失败，此为系统错误，将长期存在");
             });
@@ -343,18 +412,19 @@
          }*/
         sendMessage: function (message, callback) {
             //$.get("services/browser/request", message, callback);
-			$.ajax({
-				url:"services/browser/request",
-				data:message,
-				headers:{"Content-Type":"application/x-www-form-urlencoded ; charset=utf-8"},
-				complete:callback
-			});
+            $.ajax({
+                url: "services/browser/request",
+                data: message,
+                headers: {"Content-Type": "application/x-www-form-urlencoded ; charset=utf-8"},
+                complete: callback
+            });
         }
     };
     var Elements = {
         listUl: $("#list"),
         searchText: $("#search"),
-        albumListUl: $("#albumList")
+        albumListUl: $("#albumList"),
+        playlistUl: $("#playlist")
     }
     $(document).ready(function () {
         //Functions.addItem("http://pic7.qiyipic.com/image/20151126/f9/7a/v_109762650_m_601.jpg", "《爱情公寓》陈赫连夜说服 李金铭含泪回归", "爱奇艺", "副标题", "说明文字");
