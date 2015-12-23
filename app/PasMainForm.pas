@@ -3,8 +3,10 @@ unit PasMainForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  PasLibVlcUnit, PasQrCode, System.Win.ComObj, PasCrcHelper, Vcl.Graphics, Vcl.Controls,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes,
+  PasLibVlcUnit, PasQrCode, System.Win.ComObj, PasCrcHelper, Vcl.Graphics,
+  Vcl.Controls,
   Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, IdGlobalProtocols,
   Generics.Collections, IdBaseComponent, IdComponent, PasMessagerHelper,
   IdCustomTCPServer, IdCustomHTTPServer, PasLibVlcPlayerUnit, IdHTTPServer,
@@ -30,20 +32,28 @@ type
     procedure playerMediaPlayerPlaying(Sender: TObject);
     procedure playerMediaPlayerForward(Sender: TObject);
     procedure playerMediaPlayerOpening(Sender: TObject);
-    procedure pslbvlcmdlst1ItemAdded(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
-    procedure pslbvlcmdlst1ItemDeleted(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
-    procedure pslbvlcmdlst1NextItemSet(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+    procedure pslbvlcmdlst1ItemAdded(Sender: TObject; mrl: WideString;
+      item: Pointer; index: Integer);
+    procedure pslbvlcmdlst1ItemDeleted(Sender: TObject; mrl: WideString;
+      item: Pointer; index: Integer);
+    procedure pslbvlcmdlst1NextItemSet(Sender: TObject; mrl: WideString;
+      item: Pointer; index: Integer);
     procedure pslbvlcmdlst1Played(Sender: TObject);
     procedure pslbvlcmdlst1Stopped(Sender: TObject);
-    procedure pslbvlcmdlst1WillAddItem(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
-    procedure pslbvlcmdlst1WillDeleteItem(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
-    procedure playerMediaPlayerEvent(p_event: libvlc_event_t_ptr; data: Pointer);
+    procedure pslbvlcmdlst1WillAddItem(Sender: TObject; mrl: WideString;
+      item: Pointer; index: Integer);
+    procedure pslbvlcmdlst1WillDeleteItem(Sender: TObject; mrl: WideString;
+      item: Pointer; index: Integer);
+    procedure playerMediaPlayerEvent(p_event: libvlc_event_t_ptr;
+      data: Pointer);
     procedure playerMediaPlayerPausableChanged(Sender: TObject; val: Boolean);
-    procedure playerMediaPlayerVideoOutChanged(Sender: TObject; video_out: Integer);
+    procedure playerMediaPlayerVideoOutChanged(Sender: TObject;
+      video_out: Integer);
     procedure playerMediaPlayerBackward(Sender: TObject);
     procedure playerMediaPlayerEncounteredError(Sender: TObject);
     procedure playerMediaPlayerEndReached(Sender: TObject);
-    procedure playerGetSiteInfo(Sender: TObject; DockClient: TControl; var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+    procedure playerGetSiteInfo(Sender: TObject; DockClient: TControl;
+      var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
     procedure playerMediaPlayerLengthChanged(Sender: TObject; time: Int64);
     procedure messageProcessor(var msg: TMessage); message WM_FORDREAM;
   private
@@ -66,8 +76,10 @@ var
 implementation
 
 uses
-  CnDebug, EncdDecd, System.JSON, PasGlobalConfiguration, PasPlayActionProcessor,
-  PasVideoTransferProcessor, PasWebSrvProcessor, PasPlayControlProcessor,
+  CnDebug, EncdDecd, System.JSON, PasGlobalConfiguration,
+  PasPlayActionProcessor,
+  PasPlayerListProcessor, PasLibVlcUserData, PasVideoTransferProcessor,
+  PasWebSrvProcessor, PasPlayControlProcessor, PasLibVlcClassUnit,
   PasUpdateProcessor, PasDebugProcessor;
 {$R *.dfm}
 // {$DEFINE DEBUG}
@@ -76,6 +88,9 @@ procedure TfrmMain.messageProcessor(var msg: TMessage);
 var
   str: string;
   pStr: PChar;
+  media: TPasLibVlcMedia;
+  userData: TLibVlcUserData;
+  JSON: TJSONObject;
 begin
   CnDebugger.TraceEnter('messageProcessor', Self.ClassName);
   CnDebugger.TraceMsg('Message:' + IntToStr(msg.WParam - WM_FORDREAM));
@@ -84,7 +99,7 @@ begin
     FM_SPEAK:
       begin
         pStr := Pointer(msg.LParam);
-        cndebugger.TraceMsg('Speak Strings:' + pStr);
+        CnDebugger.TraceMsg('Speak Strings:' + pStr);
         Self.speak(pStr);
       end;
     FM_PALY_STATUS:
@@ -103,10 +118,27 @@ begin
         else
         begin
           pStr := Pointer(msg.LParam);
-          pStr := PChar(httpServerUri + pStr);
+          JSON := TJSONObject.ParseJSONValue(pStr) as TJSONObject;
+          str := Format('%s?action=vlc&base64=%s',
+            [httpServerUri, EncdDecd.EncodeString(pStr).Replace(#10,
+            '').Replace(#13, '')]);
+
+          media := pslbvlcmdlst1.CreateMedia(str);
+          userData := TLibVlcUserData.Create;
+          userData.SrcUrl := JSON.Values['url'].Value;
+          userData.LocalUrl := str;
+          userData.Referer := JSON.Values['extractor'].Value;
+          userData.Title := JSON.Values['title'].Value;
+          userData.PlayStatus := PS_WAIT_PLAY;
+          media.SetUserData(userData);
+          pslbvlcmdlst1.Add(media);
+
+          // 源地址
           CnDebugger.TraceMsg('PlayUrl:' + pStr);
-          pslbvlcmdlst1.Add(pStr, '111aaa测试挑剔bbb222');
           pslbvlcmdlst1.Play;
+
+          JSON.Free;
+          FreeAndNil(media);
         end;
       end;
     FM_NEXT:
@@ -119,13 +151,18 @@ begin
       fullScreen;
     FM_SHUTDOWN:
       CnDebugger.TraceMsg('准备关机');
+    FM_CLOSE_APP:
+      Application.Terminate;
+    FM_LIST:
+      msg.Result := DWORD(Pointer(pslbvlcmdlst1));
   end;
   CnDebugger.TraceLeave('messageProcessor', Self.ClassName);
 end;
 
 procedure TfrmMain.fullScreen;
 begin
-  player.Align := alClient; // 播放器最大化
+  player.Align := alClient;
+  // 播放器最大化
 {$IFNDEF DEBUG}
   Self.BorderStyle := bsNone; // 无边框
   Self.WindowState := wsMaximized; // 最大化
@@ -167,8 +204,9 @@ begin
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+var
+  media: TPasLibVlcMedia;
 begin
-
   CnDebugger.StartDebugViewer;
   CnDebugger.DumpToFile := True;
   CnDebugger.TraceEnter('Create');
@@ -209,11 +247,12 @@ begin
     Self.Caption := 'Port:' + IntToStr(Port);
   end;
   // register processor
-  {$IFDEF DEBUG}
+{$IFDEF DEBUG}
   httpSrv.registerProcessor(TDebugProcessor.Create);
-  {$ENDIF}
+{$ENDIF}
   httpSrv.registerProcessor(TPlayControlProcessor.Create);
   httpSrv.registerProcessor(TPlayActionProcessor.Create);
+  httpSrv.registerProcessor(TPlayerListProcessor.Create);
   httpSrv.registerProcessor(TVideoTransferProcessor.Create);
   httpSrv.registerProcessor(TWebSrvProcessor.Create);
   httpSrv.registerProcessor(TUpdateProcessor.Create);
@@ -226,7 +265,8 @@ begin
   if idpwtch1.Tag = 80 then
     httpServerUri := 'http://' + idpwtch1.LocalIP + '/'
   else
-    httpServerUri := 'http://' + idpwtch1.LocalIP + ':' + IntToStr(idpwtch1.Tag) + '/';
+    httpServerUri := 'http://' + idpwtch1.LocalIP + ':' +
+      IntToStr(idpwtch1.Tag) + '/';
 
   CnDebugger.TraceMsg('WebRoot:' + TGlobalConfiguration.getInstance.webRoot);
   CnDebugger.TraceMsg('HttpUri:' + httpServerUri);
@@ -245,21 +285,29 @@ end;
 
 procedure TfrmMain.FormDestroy(Sender: TObject);
 begin
+  // clean memory
   if pslbvlcmdlst1.IsPlay then
     pslbvlcmdlst1.Stop;
   httpSrv.Active := False;
+  httpSrv.Free;
+
+  pslbvlcmdlst1.Clear;
+  TGlobalConfiguration.getInstance.Free;
   Self.speak('感谢使用', True);
   // selfPlayList.SaveToFile(logPath);
   CnDebugger.TraceMsg('Destroy Application');
   // FreeAndNil(playList);
 end;
 
-procedure TfrmMain.playerGetSiteInfo(Sender: TObject; DockClient: TControl; var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
+procedure TfrmMain.playerGetSiteInfo(Sender: TObject; DockClient: TControl;
+  var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
 begin
   CnDebugger.TraceEnter('Get Site Info');
   CnDebugger.TraceMsg('InfluenceRect(Width):' + IntToStr(InfluenceRect.Width));
-  CnDebugger.TraceMsg('InfluenceRect(Height):' + IntToStr(InfluenceRect.Height));
-  CnDebugger.TraceMsg('MousePos:' + IntToStr(MousePos.X) + ' , ' + IntToStr(MousePos.Y));
+  CnDebugger.TraceMsg('InfluenceRect(Height):' +
+    IntToStr(InfluenceRect.Height));
+  CnDebugger.TraceMsg('MousePos:' + IntToStr(MousePos.X) + ' , ' +
+    IntToStr(MousePos.Y));
   CnDebugger.TraceMsg('CanDock:' + BoolToStr(CanDock));
   CnDebugger.TraceLeave('Get Site Info');
 end;
@@ -284,14 +332,15 @@ begin
   CnDebugger.TraceMsg('End Reached');
 end;
 
-procedure TfrmMain.playerMediaPlayerEvent(p_event: libvlc_event_t_ptr; data: Pointer);
+procedure TfrmMain.playerMediaPlayerEvent(p_event: libvlc_event_t_ptr;
+  data: Pointer);
 begin
-(*
-  CnDebugger.TraceEnter('Player Event');
-  CnDebugger.TraceMsg('EventID:' + IntToHex(Ord(p_event.event_type), 4));
-  CnDebugger.TracePointer(p_event);
-  CnDebugger.TracePointer(data);
-  CnDebugger.TraceLeave('Player Event');
+  (*
+    CnDebugger.TraceEnter('Player Event');
+    CnDebugger.TraceMsg('EventID:' + IntToHex(Ord(p_event.event_type), 4));
+    CnDebugger.TracePointer(p_event);
+    CnDebugger.TracePointer(data);
+    CnDebugger.TraceLeave('Player Event');
   *)
 end;
 
@@ -306,8 +355,29 @@ begin
 end;
 
 procedure TfrmMain.playerMediaPlayerMediaChanged(Sender: TObject; mrl: string);
+var
+  media: TPasLibVlcMedia;
+  userData: TLibVlcUserData;
+  step: Integer;
 begin
   CnDebugger.TraceMsg('Media Changed:' + mrl);
+  // mark play status
+  for step := 0 to pslbvlcmdlst1.Count - 1 do
+  begin
+    media := pslbvlcmdlst1.GetMedia(step);
+    userData := media.GetUserData;
+    if mrl.Equals(userData.LocalUrl) then
+    begin
+      userData.PlayStatus := PS_PLAYING;
+      Break;
+    end
+    else if userData.PlayStatus = PS_PLAYING then // 标记已播放
+    begin
+      userData.PlayStatus := PS_PLAYED;
+    end;
+    // media.SetUserData();
+    media.Free;
+  end;
 end;
 
 procedure TfrmMain.playerMediaPlayerNothingSpecial(Sender: TObject);
@@ -320,7 +390,8 @@ begin
   CnDebugger.TraceMsg('Opening');
 end;
 
-procedure TfrmMain.playerMediaPlayerPausableChanged(Sender: TObject; val: Boolean);
+procedure TfrmMain.playerMediaPlayerPausableChanged(Sender: TObject;
+  val: Boolean);
 begin
   CnDebugger.TraceMsg('PausableChanged');
 end;
@@ -340,22 +411,26 @@ begin
   CnDebugger.TraceMsg('Stopped');
 end;
 
-procedure TfrmMain.playerMediaPlayerVideoOutChanged(Sender: TObject; video_out: Integer);
+procedure TfrmMain.playerMediaPlayerVideoOutChanged(Sender: TObject;
+  video_out: Integer);
 begin
   CnDebugger.TraceMsg('Video Out Changed:' + IntToStr(video_out));
 end;
 
-procedure TfrmMain.pslbvlcmdlst1ItemAdded(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+procedure TfrmMain.pslbvlcmdlst1ItemAdded(Sender: TObject; mrl: WideString;
+  item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Item Added:' + mrl);
 end;
 
-procedure TfrmMain.pslbvlcmdlst1ItemDeleted(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+procedure TfrmMain.pslbvlcmdlst1ItemDeleted(Sender: TObject; mrl: WideString;
+  item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Item Deleted:' + mrl);
 end;
 
-procedure TfrmMain.pslbvlcmdlst1NextItemSet(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+procedure TfrmMain.pslbvlcmdlst1NextItemSet(Sender: TObject; mrl: WideString;
+  item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Next Item Set:' + mrl);
 end;
@@ -370,15 +445,16 @@ begin
   CnDebugger.TraceMsg('PlayList Stopped:' + Sender.ClassName);
 end;
 
-procedure TfrmMain.pslbvlcmdlst1WillAddItem(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+procedure TfrmMain.pslbvlcmdlst1WillAddItem(Sender: TObject; mrl: WideString;
+  item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Will Add Item:' + mrl);
 end;
 
-procedure TfrmMain.pslbvlcmdlst1WillDeleteItem(Sender: TObject; mrl: WideString; item: Pointer; index: Integer);
+procedure TfrmMain.pslbvlcmdlst1WillDeleteItem(Sender: TObject; mrl: WideString;
+  item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Will Delete Item:' + mrl);
 end;
 
 end.
-
