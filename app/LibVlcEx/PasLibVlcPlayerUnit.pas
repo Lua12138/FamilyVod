@@ -712,8 +712,10 @@ type
     procedure Clear();
     procedure Add(mrl: WideString); overload;
     procedure Add(mrl: WideString; title: WideString); overload;
-    function AddWithMedia(mrl: WideString; title: WideString): TPasLibVlcMedia;
+    function Add(media: TPasLibVlcMedia): TPasLibVlcMedia; overload;
     function Get(index: Integer): WideString;
+    function GetMedia(index: Integer): TPasLibVlcMedia;
+    function CreateMedia(mrl: WideString): TPasLibVlcMedia;
     function Count(): Integer;
     procedure Delete(index: Integer);
     procedure Insert(index: Integer; mrl: WideString);
@@ -757,11 +759,12 @@ procedure Register;
 implementation
 
 {$R *.RES}
-{$IFDEF DELPHI_XE6_UP}
 
 uses
-  System.AnsiStrings;
+{$IFDEF DELPHI_XE6_UP}
+  System.AnsiStrings,
 {$ENDIF}
+  CnDebug;
 {$IFDEF FPC}
 
 procedure RegisterPasLibVlcPlayerUnit;
@@ -1181,15 +1184,6 @@ procedure TPasLibVlcMediaList.Add(mrl: WideString; title: WideString);
 var
   media: TPasLibVlcMedia;
 begin
-  media := SELF.AddWithMedia(mrl, title);
-  FreeAndNil(media);
-end;
-
-function TPasLibVlcMediaList.AddWithMedia(mrl: WideString; title: WideString)
-  : TPasLibVlcMedia;
-var
-  media: TPasLibVlcMedia;
-begin
   if not Assigned(FPlayer) then
     exit;
 
@@ -1213,7 +1207,45 @@ begin
     libvlc_media_list_add_media(p_ml, media.MD);
     libvlc_media_list_unlock(p_ml);
   end;
+  FreeAndNil(media);
+end;
+
+function TPasLibVlcMediaList.Add(media: TPasLibVlcMedia): TPasLibVlcMedia;
+begin
+  if not Assigned(FPlayer) then
+    exit;
+
+  if (p_ml = NIL) then
+    SetPlayer(FPlayer);
+
+  if Assigned(SELF.FPlayer) then
+  begin
+    media.SetDeinterlaceFilter(SELF.FPlayer.FDeinterlaceFilter);
+    media.SetDeinterlaceFilterMode(SELF.FPlayer.FDeinterlaceMode);
+  end;
+
+  if (p_ml <> NIL) then
+  begin
+    libvlc_media_list_lock(p_ml);
+    libvlc_media_list_add_media(p_ml, media.MD);
+    libvlc_media_list_unlock(p_ml);
+  end;
   Result := media; // must realease it
+end;
+
+function TPasLibVlcMediaList.CreateMedia(mrl: WideString): TPasLibVlcMedia;
+var
+  media: TPasLibVlcMedia;
+begin
+  if not Assigned(FPlayer) then
+    exit;
+
+  if (p_ml = NIL) then
+    SetPlayer(FPlayer);
+
+  media := TPasLibVlcMedia.Create(FPlayer.VLC, mrl);
+
+  Result := media;
 end;
 
 function TPasLibVlcMediaList.Get(index: Integer): WideString;
@@ -1233,6 +1265,18 @@ begin
   end;
 end;
 
+function TPasLibVlcMediaList.GetMedia(index: Integer): TPasLibVlcMedia;
+var
+  media: TPasLibVlcMedia;
+begin
+  Result := nil;
+  if not Assigned(FPlayer) then
+    exit;
+
+  media := TPasLibVlcMedia.Create(FPlayer.VLC, GetItemAtIndex(index));
+  Result := media; // must release
+end;
+
 function TPasLibVlcMediaList.Count(): Integer;
 begin
   Result := 0;
@@ -1248,9 +1292,27 @@ begin
 end;
 
 procedure TPasLibVlcMediaList.Delete(index: Integer);
+var
+  media: TPasLibVlcMedia;
+  obj: TObject;
 begin
   if not Assigned(FPlayer) then
     exit;
+
+  // release user data
+  media := GetMedia(index);
+  if media.GetUserData <> nil then
+  begin
+    try
+      obj := media.GetUserData;
+      FreeAndNil(obj);
+    except
+      on E: Exception do
+        CnDebugger.TraceMsgError
+          ('TPasLibVlcMediaList.Delete:Release UserData Err:' + E.Message);
+    end;
+  end;
+  media.Free;
 
   if (p_ml <> NIL) then
   begin
