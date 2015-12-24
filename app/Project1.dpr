@@ -22,7 +22,8 @@ uses
   PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas',
   PasLibVlcMediaMeta in 'LibVlcEx\PasLibVlcMediaMeta.pas',
   PasPlayerListProcessor in 'IdHttpServerEx\PasPlayerListProcessor.pas',
-  PasLibVlcUserData in 'LibVlcEx\PasLibVlcUserData.pas';
+  PasLibVlcUserData in 'LibVlcEx\PasLibVlcUserData.pas',
+  PasYoutubedlHelper in 'Util\PasYoutubedlHelper.pas';
 
 {$R *.res}
 

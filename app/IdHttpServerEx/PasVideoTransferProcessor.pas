@@ -47,8 +47,9 @@ begin
   http := TIdHTTP.Create();
   try
     try
+      http.ConnectTimeout := 10000; // 10s
       http.HandleRedirects := True;
-
+      if TMessagerHelper.sendMessage(FM_PALY_STATUS, 0) <> PS_PLAYING then
         TMessagerHelper.sendMessage(FM_SPEAK, '正在缓冲视频，请稍后');
       // 获得文件体积
       http.Head(url);
