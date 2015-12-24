@@ -36,7 +36,6 @@ object frmMain: TfrmMain
     Left = 64
     Top = 128
     OnGetSiteInfo = playerGetSiteInfo
-    TitleShow = True
     VideoOutput = voDirectX
     AudioOutput = aoDirectX
     VideoOnTop = True
@@ -52,6 +51,7 @@ object frmMain: TfrmMain
     OnMediaPlayerBackward = playerMediaPlayerBackward
     OnMediaPlayerEndReached = playerMediaPlayerEndReached
     OnMediaPlayerEncounteredError = playerMediaPlayerEncounteredError
+    OnMediaPlayerTimeChanged = playerMediaPlayerTimeChanged
     OnMediaPlayerPausableChanged = playerMediaPlayerPausableChanged
     OnMediaPlayerLengthChanged = playerMediaPlayerLengthChanged
     OnMediaPlayerVideoOutChanged = playerMediaPlayerVideoOutChanged

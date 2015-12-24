@@ -1,4 +1,4 @@
-unit PasMainForm;
+ï»¿unit PasMainForm;
 
 interface
 
@@ -56,15 +56,17 @@ type
       var InfluenceRect: TRect; MousePos: TPoint; var CanDock: Boolean);
     procedure playerMediaPlayerLengthChanged(Sender: TObject; time: Int64);
     procedure messageProcessor(var msg: TMessage); message WM_FORDREAM;
+    procedure playerMediaPlayerTimeChanged(Sender: TObject; time: Int64);
   private
     { Private declarations }
     httpSrv: TIdHttpServerEx;
     voice: OleVariant;
-    // webRoot: string; // µã²¥Ò³Ãæ¾ø¶ÔÂ·¾¶
-    httpServerUri: string; // ±¾µØHTTP·şÎñ¾ø¶ÔÂ·¾¶
-    procedure drawQrCode; // »æÖÆµã²¥Ò³ÃæURL ¶şÎ¬Âë
-    procedure speak(text: string; sync: Boolean = False); // TTSÀÊ¶Á
-    procedure fullScreen; // È«ÆÁÎŞ±ß¿òÏÔÊ¾´°¿Ú
+    flagPreNext: Boolean;
+    // webRoot: string; // ç‚¹æ’­é¡µé¢ç»å¯¹è·¯å¾„
+    httpServerUri: string; // æœ¬åœ°HTTPæœåŠ¡ç»å¯¹è·¯å¾„
+    procedure drawQrCode; // ç»˜åˆ¶ç‚¹æ’­é¡µé¢URL äºŒç»´ç 
+    procedure speak(text: string; sync: Boolean = False); // TTSæœ—è¯»
+    procedure fullScreen; // å…¨å±æ— è¾¹æ¡†æ˜¾ç¤ºçª—å£
 
   public
     { Public declarations }
@@ -77,7 +79,7 @@ implementation
 
 uses
   CnDebug, EncdDecd, System.JSON, PasGlobalConfiguration,
-  PasPlayActionProcessor,
+  PasPlayActionProcessor, PasYoutubedlHelper,
   PasPlayerListProcessor, PasLibVlcUserData, PasVideoTransferProcessor,
   PasWebSrvProcessor, PasPlayControlProcessor, PasLibVlcClassUnit,
   PasUpdateProcessor, PasDebugProcessor;
@@ -117,27 +119,29 @@ begin
           pslbvlcmdlst1.Play
         else
         begin
-          pStr := Pointer(msg.LParam);
-          JSON := TJSONObject.ParseJSONValue(pStr) as TJSONObject;
-          str := Format('%s?action=vlc&base64=%s',
+          {
+            pStr := Pointer(msg.LParam);
+            JSON := TJSONObject.ParseJSONValue(pStr) as TJSONObject;
+            str := Format('%s?action=vlc&base64=%s',
             [httpServerUri, EncdDecd.EncodeString(pStr).Replace(#10,
             '').Replace(#13, '')]);
-
-          media := pslbvlcmdlst1.CreateMedia(str);
-          userData := TLibVlcUserData.Create;
-          userData.SrcUrl := JSON.Values['url'].Value;
-          userData.LocalUrl := str;
-          userData.Referer := JSON.Values['extractor'].Value;
-          userData.Title := JSON.Values['title'].Value;
-          userData.PlayStatus := PS_WAIT_PLAY;
+          }
+          userData := Pointer(msg.LParam);
+          media := pslbvlcmdlst1.CreateMedia(httpServerUri + userData.LocalUrl);
+          {
+            userData := TLibVlcUserData.Create;
+            userData.SrcUrl := JSON.Values['url'].Value;
+            userData.LocalUrl := str;
+            userData.Referer := JSON.Values['extractor'].Value;
+            userData.Title := JSON.Values['title'].Value;
+            userData.PlayStatus := PS_WAIT_PLAY;
+          }
           media.SetUserData(userData);
           pslbvlcmdlst1.Add(media);
 
-          // Ô´µØÖ·
-          CnDebugger.TraceMsg('PlayUrl:' + pStr);
-          pslbvlcmdlst1.Play;
+          // æºåœ°å€
+          CnDebugger.TraceMsg('PlayUrl:' + media.GetMrl);
 
-          JSON.Free;
           FreeAndNil(media);
         end;
       end;
@@ -150,7 +154,7 @@ begin
     FM_FULL_SCREEN:
       fullScreen;
     FM_SHUTDOWN:
-      CnDebugger.TraceMsg('×¼±¸¹Ø»ú');
+      CnDebugger.TraceMsg('å‡†å¤‡å…³æœº');
     FM_CLOSE_APP:
       Application.Terminate;
     FM_LIST:
@@ -162,10 +166,10 @@ end;
 procedure TfrmMain.fullScreen;
 begin
   player.Align := alClient;
-  // ²¥·ÅÆ÷×î´ó»¯
+  // æ’­æ”¾å™¨æœ€å¤§åŒ–
 {$IFNDEF DEBUG}
-  Self.BorderStyle := bsNone; // ÎŞ±ß¿ò
-  Self.WindowState := wsMaximized; // ×î´ó»¯
+  Self.BorderStyle := bsNone; // æ— è¾¹æ¡†
+  Self.WindowState := wsMaximized; // æœ€å¤§åŒ–
   ClientHeight := Screen.Height;
   ClientWidth := Screen.Width;
 {$ELSE}
@@ -198,9 +202,9 @@ end;
 procedure TfrmMain.speak(text: string; sync: Boolean = False);
 begin
   if sync then
-    voice.speak(text, 0) // <- 1 ÎªÒì²½ÀÊ¶Á
+    voice.speak(text, 0) // <- 1 ä¸ºå¼‚æ­¥æœ—è¯»
   else
-    voice.speak(text, 1); // <- 1 ÎªÒì²½ÀÊ¶Á
+    voice.speak(text, 1); // <- 1 ä¸ºå¼‚æ­¥æœ—è¯»
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -211,7 +215,7 @@ begin
   CnDebugger.DumpToFile := True;
   CnDebugger.TraceEnter('Create');
 
-  TMessagerHelper.initialize(Self.Handle); // ³õÊ¼»¯ÏûÏ¢¶ÔÏó
+  TMessagerHelper.initialize(Self.Handle); // åˆå§‹åŒ–æ¶ˆæ¯å¯¹è±¡
 
   // vlc settings
   player.VLC.Path := TGlobalConfiguration.getInstance.vlcRoot;
@@ -238,20 +242,13 @@ begin
   with httpSrv.Bindings.Add do
   begin
     IP := idpwtch1.LocalIP;
-{$IFNDEF DEBUG}
     Port := Random(64535) + 1000; // 1000 - 65535
-{$ELSE}
-    Port := 80;
-{$ENDIF}
     idpwtch1.Tag := Port;
     Self.Caption := 'Port:' + IntToStr(Port);
   end;
-  // register processor
-{$IFDEF DEBUG}
-  httpSrv.registerProcessor(TDebugProcessor.Create);
-{$ENDIF}
   httpSrv.registerProcessor(TPlayControlProcessor.Create);
   httpSrv.registerProcessor(TPlayActionProcessor.Create);
+  httpSrv.registerProcessor(TPlayAction2Processor.Create);
   httpSrv.registerProcessor(TPlayerListProcessor.Create);
   httpSrv.registerProcessor(TVideoTransferProcessor.Create);
   httpSrv.registerProcessor(TWebSrvProcessor.Create);
@@ -261,7 +258,7 @@ begin
   CnDebugger.TraceMsg('Bind Port' + IntToStr(idpwtch1.Tag));
   httpSrv.Active := True; // start up
 
-  // È«¾ÖÂ·¾¶ÅäÖÃ
+  // å…¨å±€è·¯å¾„é…ç½®
   if idpwtch1.Tag = 80 then
     httpServerUri := 'http://' + idpwtch1.LocalIP + '/'
   else
@@ -279,7 +276,7 @@ begin
   voice := CreateOLEObject('SAPI.SpVoice');
   voice.Volume := 100;
 
-  Self.speak('É¨ÃèÆÁÄ»¶şÎ¬Âë£¬ÒÔµã²¥ÄúĞèÒªµÄÊÓÆµ¡£');
+  Self.speak('æ‰«æå±å¹•äºŒç»´ç ï¼Œä»¥ç‚¹æ’­æ‚¨éœ€è¦çš„è§†é¢‘ã€‚');
   CnDebugger.TraceLeave('Create');
 end;
 
@@ -293,7 +290,7 @@ begin
 
   pslbvlcmdlst1.Clear;
   TGlobalConfiguration.getInstance.Free;
-  Self.speak('¸ĞĞ»Ê¹ÓÃ', True);
+  Self.speak('æ„Ÿè°¢ä½¿ç”¨', True);
   // selfPlayList.SaveToFile(logPath);
   CnDebugger.TraceMsg('Destroy Application');
   // FreeAndNil(playList);
@@ -371,7 +368,7 @@ begin
       userData.PlayStatus := PS_PLAYING;
       Break;
     end
-    else if userData.PlayStatus = PS_PLAYING then // ±ê¼ÇÒÑ²¥·Å
+    else if userData.PlayStatus = PS_PLAYING then // æ ‡è®°å·²æ’­æ”¾
     begin
       userData.PlayStatus := PS_PLAYED;
     end;
@@ -404,6 +401,8 @@ end;
 procedure TfrmMain.playerMediaPlayerPlaying(Sender: TObject);
 begin
   CnDebugger.TraceMsg('Playing');
+  fullScreen;
+  Self.flagPreNext := True;
 end;
 
 procedure TfrmMain.playerMediaPlayerStopped(Sender: TObject);
@@ -411,26 +410,92 @@ begin
   CnDebugger.TraceMsg('Stopped');
 end;
 
+procedure TfrmMain.playerMediaPlayerTimeChanged(Sender: TObject; time: Int64);
+var
+  total, current: Int64;
+  media: TPasLibVlcMedia;
+  mrl: string;
+  step: Integer;
+const
+  bufferTimeout = 1000 { ms/s } * 60 { s/min } * 2 { min };
+begin
+  // æ ¹æ®å‰©ä½™çš„æ’­æ”¾æ—¶é—´ï¼Œé¢„å…ˆè®¡ç®—ä¸‹ä¸€ä¸ªæ’­æ”¾åœ°å€
+  current := player.GetVideoPosInMs;
+  total := player.GetVideoLenInMs;
+  if Self.flagPreNext and (total - current < bufferTimeout) then
+  begin
+    Self.flagPreNext := False;
+    CnDebugger.TraceMsg('Pre-Calc Next Url');
+    mrl := player.GetMediaMrl;
+    // pslbvlcmdlst1.get
+    for step := 0 to pslbvlcmdlst1.Count - 1 do
+    begin
+      media := pslbvlcmdlst1.GetMedia(step);
+      if mrl.Equals(media.GetMrl) then
+      begin
+        FreeAndNil(media);
+        if step < pslbvlcmdlst1.Count - 1 then // ä¸æ˜¯æœ€åä¸€ä¸ª
+        begin
+          media := pslbvlcmdlst1.GetMedia(step + 1);
+          // å¼‚æ­¥æŸ¥è¯¢
+          TThread.CreateAnonymousThread(
+            procedure
+            var
+              youtubedlResponse: string;
+              userData: TLibVlcUserData;
+              inMedia: TPasLibVlcMedia;
+            begin
+              userData := media.GetUserData;
+
+              youtubedlResponse := TYoutubeDlHelper.GetVideoInfo
+                (userData.SrcUrl, userData.index);
+              if youtubedlResponse.Chars[0] = '{' then
+              begin
+                inMedia := pslbvlcmdlst1.CreateMedia
+                  (Format('%s?action=vlc&base64=%s', [httpServerUri,
+                  EncdDecd.EncodeString(youtubedlResponse).Replace(#10,
+                  '').Replace(#13, '')]));
+                inMedia.SetUserData(userData);
+                if pslbvlcmdlst1.Exchange(media, inMedia) then
+                  CnDebugger.TraceMsg('Exchange okay')
+                else
+                  CnDebugger.TraceMsg('Exchange fail');
+                FreeAndNil(inMedia);
+              end
+              else
+              begin
+                CnDebugger.TraceMsg('Async Query Url Err:' + youtubedlResponse);
+              end;
+              FreeAndNil(media);
+            end).Start;
+        end;
+        Break;
+      end;
+      FreeAndNil(media);
+    end;
+  end;
+end;
+
 procedure TfrmMain.playerMediaPlayerVideoOutChanged(Sender: TObject;
-  video_out: Integer);
+video_out: Integer);
 begin
   CnDebugger.TraceMsg('Video Out Changed:' + IntToStr(video_out));
 end;
 
 procedure TfrmMain.pslbvlcmdlst1ItemAdded(Sender: TObject; mrl: WideString;
-  item: Pointer; index: Integer);
+item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Item Added:' + mrl);
 end;
 
 procedure TfrmMain.pslbvlcmdlst1ItemDeleted(Sender: TObject; mrl: WideString;
-  item: Pointer; index: Integer);
+item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Item Deleted:' + mrl);
 end;
 
 procedure TfrmMain.pslbvlcmdlst1NextItemSet(Sender: TObject; mrl: WideString;
-  item: Pointer; index: Integer);
+item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Next Item Set:' + mrl);
 end;
@@ -446,13 +511,13 @@ begin
 end;
 
 procedure TfrmMain.pslbvlcmdlst1WillAddItem(Sender: TObject; mrl: WideString;
-  item: Pointer; index: Integer);
+item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Will Add Item:' + mrl);
 end;
 
 procedure TfrmMain.pslbvlcmdlst1WillDeleteItem(Sender: TObject; mrl: WideString;
-  item: Pointer; index: Integer);
+item: Pointer; index: Integer);
 begin
   CnDebugger.TraceMsg('PlayList Will Delete Item:' + mrl);
 end;

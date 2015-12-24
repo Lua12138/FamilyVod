@@ -1,4 +1,4 @@
-(*
+﻿(*
   *******************************************************************************
   * PasLibVlcPlayerUnit.pas - VCL component for VideoLAN libvlc 2.2.0
   *
@@ -713,6 +713,8 @@ type
     procedure Add(mrl: WideString); overload;
     procedure Add(mrl: WideString; title: WideString); overload;
     function Add(media: TPasLibVlcMedia): TPasLibVlcMedia; overload;
+    function Exchange(outMedia: TPasLibVlcMedia;
+      inMedia: TPasLibVlcMedia): Boolean;
     function Get(index: Integer): WideString;
     function GetMedia(index: Integer): TPasLibVlcMedia;
     function CreateMedia(mrl: WideString): TPasLibVlcMedia;
@@ -1248,6 +1250,36 @@ begin
   Result := media;
 end;
 
+function TPasLibVlcMediaList.Exchange(outMedia: TPasLibVlcMedia;
+  inMedia: TPasLibVlcMedia): Boolean;
+var
+  int: Integer;
+begin
+  Result := FALSE;
+  if not Assigned(FPlayer) then
+    exit(FALSE);
+
+  if (outMedia = nil) or (inMedia = nil) then
+    exit(FALSE);
+
+  inMedia.SetDeinterlaceFilter(SELF.FPlayer.FDeinterlaceFilter);
+  inMedia.SetDeinterlaceFilterMode(SELF.FPlayer.FDeinterlaceMode);
+
+  if (p_ml <> NIL) then
+  begin
+    libvlc_media_list_lock(p_ml);
+    // libvlc_media_list_add_media(p_ml, media.MD);
+    int := libvlc_media_list_index_of_item(p_ml, outMedia.MD);
+    if int <> -1 then
+    begin
+      libvlc_media_list_remove_index(p_ml, int);
+      libvlc_media_list_insert_media(p_ml, inMedia.MD, int);
+      Result := TRUE;
+    end;
+    libvlc_media_list_unlock(p_ml);
+  end;
+end;
+
 function TPasLibVlcMediaList.Get(index: Integer): WideString;
 var
   p_md: libvlc_media_t_ptr;
@@ -1261,7 +1293,8 @@ begin
   if Assigned(p_md) then
   begin
     mrl := libvlc_media_get_mrl(p_md);
-    Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(mrl);
+    Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(mrl);
   end;
 end;
 
@@ -1381,7 +1414,8 @@ var
 begin
   if Assigned(FOnItemAdded) then
   begin
-    mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
+    mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
     OnItemAdded(SELF, mrl, item, index);
   end;
 end;
@@ -1393,7 +1427,8 @@ var
 begin
   if Assigned(FOnItemDeleted) then
   begin
-    mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
+    mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
     OnItemDeleted(SELF, mrl, item, index);
   end;
 end;
@@ -1405,7 +1440,8 @@ var
 begin
   if Assigned(FOnWillAddItem) then
   begin
-    mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
+    mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
     OnItemAdded(SELF, mrl, item, index);
   end;
 end;
@@ -1417,7 +1453,8 @@ var
 begin
   if Assigned(FOnWillDeleteItem) then
   begin
-    mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
+    mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
     OnWillDeleteItem(SELF, mrl, item, index);
   end;
 end;
@@ -1430,7 +1467,8 @@ var
 begin
   if Assigned(FOnNextItemSet) then
   begin
-    mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
+    mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(item));
     idx := IndexOfItem(item);
     OnNextItemSet(SELF, mrl, item, idx);
   end;
@@ -1482,7 +1520,8 @@ begin
   FMouseEventsHandler := mehComponent;
 
   FStartOptions := TStringList.Create;
-  FCS := {$IFDEF HAS_SYNCOBJS}SyncObjs.{$ENDIF}TCriticalSection.Create;
+  FCS :=
+{$IFDEF HAS_SYNCOBJS}SyncObjs.{$ENDIF}TCriticalSection.Create;
 
   if (csDesigning in ComponentState) then
     exit;
@@ -2137,7 +2176,8 @@ begin
       if (cnt > 0) then
       begin
         sub_p_md := libvlc_media_list_item_at_index(p_ml, 0);
-        mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(sub_p_md));
+        mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(sub_p_md));
         libvlc_media_release(sub_p_md);
       end;
       libvlc_media_list_unlock(p_ml);
@@ -2171,7 +2211,8 @@ begin
       if (cnt > 0) then
       begin
         sub_p_md := libvlc_media_list_item_at_index(p_ml, 0);
-        Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(sub_p_md));
+        Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_media_get_mrl(sub_p_md));
         libvlc_media_release(sub_p_md);
       end;
       libvlc_media_list_unlock(p_ml);
@@ -2379,7 +2420,8 @@ begin
   libvlcaspect := libvlc_video_get_aspect_ratio(p_mi);
   if (libvlcaspect <> NIL) then
   begin
-    Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(AnsiString(libvlcaspect));
+    Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(AnsiString(libvlcaspect));
     libvlc_free(libvlcaspect);
   end;
 end;
@@ -2780,7 +2822,8 @@ begin
     begin
       if (p_track^.psz_name <> NIL) then
       begin
-        Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+        Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
       end;
       break;
     end;
@@ -2813,7 +2856,8 @@ begin
   begin
     if (p_track^.psz_name <> NIL) then
     begin
-      Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+      Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
     end;
   end;
 end;
@@ -3058,7 +3102,8 @@ begin
     PAnsiChar(Utf8Encode(aOut)), deviceIdx);
   if (device_id <> NIL) then
   begin
-    Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(device_id);
+    Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(device_id);
     libvlc_free(device_id);
   end;
 end;
@@ -3073,7 +3118,8 @@ begin
   Result := '';
   if (device_name <> NIL) then
   begin
-    Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(device_name);
+    Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(device_name);
     // libvlc_free(device_name);
   end;
 end;
@@ -3227,7 +3273,8 @@ begin
     begin
       if (p_track^.psz_name <> NIL) then
       begin
-        Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+        Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
       end;
       break;
     end;
@@ -3260,7 +3307,8 @@ begin
   begin
     if (p_track^.psz_name <> NIL) then
     begin
-      Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+      Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
     end;
   end;
 end;
@@ -3387,7 +3435,8 @@ begin
     begin
       if (p_track^.psz_name <> NIL) then
       begin
-        Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+        Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
       end;
       break;
     end;
@@ -3420,7 +3469,8 @@ begin
   begin
     if (p_track^.psz_name <> NIL) then
     begin
-      Result := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
+      Result :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(p_track^.psz_name);
     end;
   end;
 end;
@@ -3570,7 +3620,8 @@ begin
   if not Assigned(p_mi) then
     exit;
   if loop then
-    libvlc_video_set_logo_int(p_mi, libvlc_logo_Repeat, -1) // -1 = loop,
+    libvlc_video_set_logo_int(p_mi, libvlc_logo_Repeat, -1)
+    // -1 = loop,
   else
     libvlc_video_set_logo_int(p_mi, libvlc_logo_Repeat, 0); // 0 - disable
 end;
@@ -3707,7 +3758,8 @@ procedure TPasLibVlcPlayer.MarqueeSetEnable(enable: Integer);
 begin
   if not Assigned(p_mi) then
     exit;
-  libvlc_video_set_marquee_int(p_mi, libvlc_marquee_Enable, enable); // not work
+  libvlc_video_set_marquee_int(p_mi, libvlc_marquee_Enable, enable);
+  // not work
 end;
 
 procedure TPasLibVlcPlayer.MarqueeShowText(marquee_text: WideString;
@@ -3846,7 +3898,8 @@ begin
     if (p_md <> NIL) then
     begin
       tmp := libvlc_media_get_mrl(p_md);
-      mrl := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(tmp);
+      mrl :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(tmp);
     end
     else
     begin
@@ -3924,7 +3977,8 @@ procedure TPasLibVlcPlayer.WmMediaPlayerEncounteredError(var m: TVlcMessage);
 begin
   FCS.Enter();
   try
-    FError := {$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_errmsg());
+    FError :=
+{$IFDEF DELPHI_XE2_UP}UTF8ToWideString{$ELSE}UTF8Decode{$ENDIF}(libvlc_errmsg());
   finally
     FCS.Leave();
   end;
