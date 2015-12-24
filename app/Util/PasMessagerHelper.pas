@@ -19,24 +19,24 @@ type
 const
   WM_FORDREAM = WM_USER + 7;
   // FM -> forDream Message
-  FM_PALY_STATUS = WM_FORDREAM + 1; // ��ѯ����״̬
-  FM_SPEAK = WM_FORDREAM + 2; // ����tts�ʶ�
-  FM_SPEAK_SYNC = WM_FORDREAM + 9; // ͬ������tts
-  FM_SPEAK_ASYNC = FM_SPEAK; // �첽����tts
-  FM_PLAY = WM_FORDREAM + 3; // �������̲߳���
-  FM_FULL_SCREEN = WM_FORDREAM + 4; // ����ȫ��
-  FM_NEXT = WM_FORDREAM + 5; // ��һ��
-  FM_PAUSE = WM_FORDREAM + 6; // ��ͣ
-  FM_STOP = WM_FORDREAM + 7; // ��ֹ
-  FM_SHUTDOWN = WM_FORDREAM + 8; // �ػ�
-  FM_LIST = WM_FORDREAM + 10; // ��ʾ�����б�
-  FM_CLOSE_APP = WM_FORDREAM + 11; // �ر�Ӧ�� for test
+  FM_PALY_STATUS = WM_FORDREAM + 1; // 查询播放状态
+  FM_SPEAK = WM_FORDREAM + 2; // 请求tts朗读
+  FM_SPEAK_SYNC = WM_FORDREAM + 9; // 同步请求tts
+  FM_SPEAK_ASYNC = FM_SPEAK; // 异步请求tts
+  FM_PLAY = WM_FORDREAM + 3; // 请求主线程播放
+  FM_FULL_SCREEN = WM_FORDREAM + 4; // 请求全屏
+  FM_NEXT = WM_FORDREAM + 5; // 下一首
+  FM_PAUSE = WM_FORDREAM + 6; // 暂停
+  FM_STOP = WM_FORDREAM + 7; // 终止
+  FM_SHUTDOWN = WM_FORDREAM + 8; // 关机
+  FM_LIST = WM_FORDREAM + 10; // 显示播放列表
+  FM_CLOSE_APP = WM_FORDREAM + 11; // 关闭应用 for test
   // PS -> Play Status
-  PS_WAIT_PLAY = 0; // �ȴ�����
-  PS_PLAYING = 1; // ���ڲ���
-  PS_PAUSED = 2; // ��ͣ
-  PS_OTHER = 3; // ����״̬
-  PS_PLAYED = 4; // �Ѳ���
+  PS_WAIT_PLAY = 0; // 等待播放
+  PS_PLAYING = 1; // 正在播放
+  PS_PAUSED = 2; // 暂停
+  PS_OTHER = 3; // 其他状态
+  PS_PLAYED = 4; // 已播放
   /// ///////////////////
 
 implementation

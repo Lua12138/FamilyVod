@@ -1,4 +1,4 @@
-﻿2015.02.28 Updated for better support version 2.2.0
+2015.02.28 Updated for better support version 2.2.0
 
            New functions:
 

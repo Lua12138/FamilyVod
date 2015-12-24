@@ -140,7 +140,7 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo;
             begin
               intI := intK;
               strString := strString + strsearchSubStr;
-              Break; // ²»Æ¥Åä ÍË³öFOR
+              Break; // ä¸åŒ¹é… é€€å‡ºFOR
             end;
           end;
           if (intJ = SubStringSize) or (SubStringSize = 1) then
@@ -163,7 +163,7 @@ function TPlayActionProcessor.onGet(requestInfo: TIdHTTPRequestInfo;
         end;
       end
       else
-      begin // ½«Ê£ÏÂµÄ×Ö·û¸ø×÷ÎªÒ»¸ö×Ö·û´®¸´ÖÆ¸ø×Ö·û´®¼¯ºÏ
+      begin // å°†å‰©ä¸‹çš„å­—ç¬¦ç»™ä½œä¸ºä¸€ä¸ªå­—ç¬¦ä¸²å¤åˆ¶ç»™å­—ç¬¦ä¸²é›†åˆ
         strString := strString + string(pString + intI);
         ts.Add(strString);
         intI := nSize;
@@ -185,38 +185,38 @@ begin
   url := requestInfo.Params.Values['url'];
   if EmptyStr.Equals(url) then
   begin
-    // »Ö¸´²¥·Å,²Ù×÷Ö¸Áî²»½øÈë¶ÓÁĞ£¬Ö±½ÓÖ´ĞĞ
+    // æ¢å¤æ’­æ”¾,æ“ä½œæŒ‡ä»¤ä¸è¿›å…¥é˜Ÿåˆ—ï¼Œç›´æ¥æ‰§è¡Œ
     CnDebugger.TraceMsg('Resume Play');
     TMessagerHelper.sendMessage(FM_PLAY, 0);
     TMessagerHelper.postMessage(FM_FULL_SCREEN, 0);
-    httpResponse := '¼ÌĞø²¥·Å...';
+    httpResponse := 'ç»§ç»­æ’­æ”¾...';
   end
   else
   begin
-    // ²»´¦ÓÚ²¥·Å×´Ì¬ ÓïÑÔÌáÊ¾
+    // ä¸å¤„äºæ’­æ”¾çŠ¶æ€ è¯­è¨€æç¤º
     if TMessagerHelper.sendMessage(FM_PALY_STATUS, 0) <> PS_PLAYING then
     begin
-      TMessagerHelper.sendMessage(FM_SPEAK, 'ÕıÔÚ²éÑ¯²¥·ÅµØÖ·£¬ÇëÉÔºó¡£');
+      TMessagerHelper.sendMessage(FM_SPEAK, 'æ­£åœ¨æŸ¥è¯¢æ’­æ”¾åœ°å€ï¼Œè¯·ç¨åã€‚');
     end;
 
-    // youtube-dl ÃüÁîĞĞ
+    // youtube-dl å‘½ä»¤è¡Œ
     execYoutubedl := Format('%s -j "%s"',
       [tglobalconfiguration.getInstance.youtubedlRoot, url]);
 
     CnDebugger.TraceMsg('exec:' + execYoutubedl);
-    // ºÄÊ±¿ÉÄÜ½Ï³¤
+    // è€—æ—¶å¯èƒ½è¾ƒé•¿
     youtubedlResponse := RunDosCommand(execYoutubedl);
 
     CnDebugger.TraceMsg('Youtube-dl Response:' + youtubedlResponse);
 
     spliter := SplitString(PChar(youtubedlResponse), #10);
-    // ÅĞ¶ÏÊÇ·ñÖ´ĞĞÊ§°Ü
+    // åˆ¤æ–­æ˜¯å¦æ‰§è¡Œå¤±è´¥
     try
       for i := 0 to spliter.Count - 1 do
       begin
-        if spliter.Strings[i].Chars[0] <> '{' then // ²âÊÔÅĞ¶Ï´íÎóÏìÓ¦µÄ±ê¼Ç
+        if spliter.Strings[i].Chars[0] <> '{' then // æµ‹è¯•åˆ¤æ–­é”™è¯¯å“åº”çš„æ ‡è®°
           CnDebugger.TraceMsg('[TestTag] Response Error');
-        if Pos('ERROR', spliter.Strings[i]) = 0 then // Ã»ÓĞ´íÎó
+        if Pos('ERROR', spliter.Strings[i]) = 0 then // æ²¡æœ‰é”™è¯¯
         begin
           CnDebugger.TraceMsg(Format('Response %d of %d : %s',
             [i, spliter.Count, spliter.Strings[i]]));
@@ -224,15 +224,15 @@ begin
           TMessagerHelper.sendMessage(FM_PLAY, spliter.Strings[i]);
           CnDebugger.TraceMsg('add item:' + localPlayUrl);
           TMessagerHelper.postMessage(FM_FULL_SCREEN, 0);
-          httpResponse := 'ÒÑ¼ÓÈë²¥·ÅÁĞ±í';
+          httpResponse := 'å·²åŠ å…¥æ’­æ”¾åˆ—è¡¨';
         end
         else
         begin
           CnDebugger.TraceMsg(youtubedlResponse);
-          httpResponse := 'L229:µã²¥Ê§°Ü';
-          // ·Ç²¥·Å×´Ì¬ÌáÊ¾
+          httpResponse := 'L229:ç‚¹æ’­å¤±è´¥';
+          // éæ’­æ”¾çŠ¶æ€æç¤º
           if TMessagerHelper.sendMessage(FM_PALY_STATUS, 0) <> PS_PLAYING then
-            TMessagerHelper.sendMessage(FM_SPEAK, 'µã²¥Ê§°Ü£¬ÇëÔÙ´Î³¢ÊÔ£¬¿ÉÄÜÊÇ²»Ö§³Ö¸ÃÊÓÆµ');
+            TMessagerHelper.sendMessage(FM_SPEAK, 'ç‚¹æ’­å¤±è´¥ï¼Œè¯·å†æ¬¡å°è¯•ï¼Œå¯èƒ½æ˜¯ä¸æ”¯æŒè¯¥è§†é¢‘');
           Break;
         end;
       end;
@@ -240,7 +240,7 @@ begin
       on E: Exception do
       begin
         CnDebugger.TraceMsgError('Url Err:' + E.Message);
-        httpResponse := 'µã²¥Ê±·¢Éú´íÎó';
+        httpResponse := 'ç‚¹æ’­æ—¶å‘ç”Ÿé”™è¯¯';
       end
     end;
     spliter.Free;

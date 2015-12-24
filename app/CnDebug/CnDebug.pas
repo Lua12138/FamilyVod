@@ -1,68 +1,68 @@
 {******************************************************************************}
 {                       CnPack For Delphi/C++Builder                           }
-{                     ÖĞ¹úÈË×Ô¼ºµÄ¿ª·ÅÔ´ÂëµÚÈı·½¿ª·¢°ü                         }
-{                   (C)Copyright 2001-2015 CnPack ¿ª·¢×é                       }
+{                     ä¸­å›½äººè‡ªå·±çš„å¼€æ”¾æºç ç¬¬ä¸‰æ–¹å¼€å‘åŒ…                         }
+{                   (C)Copyright 2001-2015 CnPack å¼€å‘ç»„                       }
 {                   ------------------------------------                       }
 {                                                                              }
-{            ±¾¿ª·¢°üÊÇ¿ªÔ´µÄ×ÔÓÉÈí¼ş£¬Äú¿ÉÒÔ×ñÕÕ CnPack µÄ·¢²¼Ğ­ÒéÀ´ĞŞ        }
-{        ¸ÄºÍÖØĞÂ·¢²¼ÕâÒ»³ÌĞò¡£                                                }
+{            æœ¬å¼€å‘åŒ…æ˜¯å¼€æºçš„è‡ªç”±è½¯ä»¶ï¼Œæ‚¨å¯ä»¥éµç…§ CnPack çš„å‘å¸ƒåè®®æ¥ä¿®        }
+{        æ”¹å’Œé‡æ–°å‘å¸ƒè¿™ä¸€ç¨‹åºã€‚                                                }
 {                                                                              }
-{            ·¢²¼ÕâÒ»¿ª·¢°üµÄÄ¿µÄÊÇÏ£ÍûËüÓĞÓÃ£¬µ«Ã»ÓĞÈÎºÎµ£±£¡£ÉõÖÁÃ»ÓĞ        }
-{        ÊÊºÏÌØ¶¨Ä¿µÄ¶øÒşº¬µÄµ£±£¡£¸üÏêÏ¸µÄÇé¿öÇë²ÎÔÄ CnPack ·¢²¼Ğ­Òé¡£        }
+{            å‘å¸ƒè¿™ä¸€å¼€å‘åŒ…çš„ç›®çš„æ˜¯å¸Œæœ›å®ƒæœ‰ç”¨ï¼Œä½†æ²¡æœ‰ä»»ä½•æ‹…ä¿ã€‚ç”šè‡³æ²¡æœ‰        }
+{        é€‚åˆç‰¹å®šç›®çš„è€Œéšå«çš„æ‹…ä¿ã€‚æ›´è¯¦ç»†çš„æƒ…å†µè¯·å‚é˜… CnPack å‘å¸ƒåè®®ã€‚        }
 {                                                                              }
-{            ÄúÓ¦¸ÃÒÑ¾­ºÍ¿ª·¢°üÒ»ÆğÊÕµ½Ò»·İ CnPack ·¢²¼Ğ­ÒéµÄ¸±±¾¡£Èç¹û        }
-{        »¹Ã»ÓĞ£¬¿É·ÃÎÊÎÒÃÇµÄÍøÕ¾£º                                            }
+{            æ‚¨åº”è¯¥å·²ç»å’Œå¼€å‘åŒ…ä¸€èµ·æ”¶åˆ°ä¸€ä»½ CnPack å‘å¸ƒåè®®çš„å‰¯æœ¬ã€‚å¦‚æœ        }
+{        è¿˜æ²¡æœ‰ï¼Œå¯è®¿é—®æˆ‘ä»¬çš„ç½‘ç«™ï¼š                                            }
 {                                                                              }
-{            ÍøÕ¾µØÖ·£ºhttp://www.cnpack.org                                   }
-{            µç×ÓÓÊ¼ş£ºmaster@cnpack.org                                       }
+{            ç½‘ç«™åœ°å€ï¼šhttp://www.cnpack.org                                   }
+{            ç”µå­é‚®ä»¶ï¼šmaster@cnpack.org                                       }
 {                                                                              }
 {******************************************************************************}
 
 unit CnDebug;
 {* |<PRE>
 ================================================================================
-* Èí¼şÃû³Æ£ºCnDebugger
-* µ¥ÔªÃû³Æ£ºCnDebug µ÷ÊÔĞÅÏ¢Êä³ö½Ó¿Úµ¥Ôª
-* µ¥Ôª×÷Õß£ºÁõĞ¥£¨liuxiao@cnpack.org£©
-* ±¸    ×¢£º¸Ãµ¥Ôª¶¨Òå²¢ÊµÏÖÁË CnDebugger Êä³öĞÅÏ¢µÄ½Ó¿ÚÄÚÈİ
-*           ²¿·ÖÄÚÈİÒıÓÃÁË overseer µÄ udbg µ¥ÔªÄÚÈİ
-* ¿ª·¢Æ½Ì¨£ºPWin2000Pro + Delphi 7
-* ¼æÈİ²âÊÔ£ºPWin9X/2000/XP + Delphi 5/6/7 + C++Builder 5/6
-* ±¾ µØ »¯£º¸Ãµ¥ÔªÖĞµÄ×Ö·û´®¾ù·ûºÏ±¾µØ»¯´¦Àí·½Ê½
-* µ¥Ôª±êÊ¶£º$Id$
-* ĞŞ¸Ä¼ÇÂ¼£º2015.06.16
-*               Ôö¼ÓËÄ¸ö¼ÇÂ¼ Class/Interface µÄ·½·¨
+* è½¯ä»¶åç§°ï¼šCnDebugger
+* å•å…ƒåç§°ï¼šCnDebug è°ƒè¯•ä¿¡æ¯è¾“å‡ºæ¥å£å•å…ƒ
+* å•å…ƒä½œè€…ï¼šåˆ˜å•¸ï¼ˆliuxiao@cnpack.orgï¼‰
+* å¤‡    æ³¨ï¼šè¯¥å•å…ƒå®šä¹‰å¹¶å®ç°äº† CnDebugger è¾“å‡ºä¿¡æ¯çš„æ¥å£å†…å®¹
+*           éƒ¨åˆ†å†…å®¹å¼•ç”¨äº† overseer çš„ udbg å•å…ƒå†…å®¹
+* å¼€å‘å¹³å°ï¼šPWin2000Pro + Delphi 7
+* å…¼å®¹æµ‹è¯•ï¼šPWin9X/2000/XP + Delphi 5/6/7 + C++Builder 5/6
+* æœ¬ åœ° åŒ–ï¼šè¯¥å•å…ƒä¸­çš„å­—ç¬¦ä¸²å‡ç¬¦åˆæœ¬åœ°åŒ–å¤„ç†æ–¹å¼
+* å•å…ƒæ ‡è¯†ï¼š$Id$
+* ä¿®æ”¹è®°å½•ï¼š2015.06.16
+*               å¢åŠ å››ä¸ªè®°å½• Class/Interface çš„æ–¹æ³•
 *           2015.06.03
-*               Ôö¼ÓÁ½¸ö¼ÇÂ¼ array of const µÄ·½·¨
+*               å¢åŠ ä¸¤ä¸ªè®°å½• array of const çš„æ–¹æ³•
 *           2015.05.15
-*               ĞŞÕı¶àÏß³ÌÍ¬Ê±Æô¶¯ CnDebugViewer Ê±¿ÉÄÜµ¼ÖÂ¶ªĞÅÏ¢µÄÎÊÌâ
+*               ä¿®æ­£å¤šçº¿ç¨‹åŒæ—¶å¯åŠ¨ CnDebugViewer æ—¶å¯èƒ½å¯¼è‡´ä¸¢ä¿¡æ¯çš„é—®é¢˜
 *           2015.04.13
-*               Ôö¼ÓÁ½¸ö¼ÇÂ¼×Ö·û´®µÄ·½·¨£¬´øÊ®Áù½øÖÆÊä³ö£¬¿É¹© Ansi/Unicode Ê¹ÓÃ
+*               å¢åŠ ä¸¤ä¸ªè®°å½•å­—ç¬¦ä¸²çš„æ–¹æ³•ï¼Œå¸¦åå…­è¿›åˆ¶è¾“å‡ºï¼Œå¯ä¾› Ansi/Unicode ä½¿ç”¨
 *           2014.10.03
-*               Ôö¼ÓÁ½¸ö¼ÇÂ¼ Exception µÄ·½·¨
+*               å¢åŠ ä¸¤ä¸ªè®°å½• Exception çš„æ–¹æ³•
 *           2012.10.15
-*               ĞŞÕıtkUString¶ÔD2009°æ±¾ÒÔÉÏµÄÖ§³Ö
+*               ä¿®æ­£tkUStringå¯¹D2009ç‰ˆæœ¬ä»¥ä¸Šçš„æ”¯æŒ
 *           2012.05.10
-*               ³¬³¤ĞÅÏ¢½«²ğ·Ö·¢ËÍ¶ø²»ÊÇ½Ø¶Ï
+*               è¶…é•¿ä¿¡æ¯å°†æ‹†åˆ†å‘é€è€Œä¸æ˜¯æˆªæ–­
 *           2009.12.31
-*               ²»Êä³öÖÁCnDebugViewerÊ±Ò²¿ÉÊä³öÖÁÎÄ¼ş
+*               ä¸è¾“å‡ºè‡³CnDebugVieweræ—¶ä¹Ÿå¯è¾“å‡ºè‡³æ–‡ä»¶
 *           2008.07.16
-*               Ôö¼Ó²¿·ÖÉùÃ÷ÒÔÇø·Ö¶Ô¿í×Ö·ûµÄÖ§³Ö¡£
+*               å¢åŠ éƒ¨åˆ†å£°æ˜ä»¥åŒºåˆ†å¯¹å®½å­—ç¬¦çš„æ”¯æŒã€‚
 *           2008.05.01
-*               Ôö¼Ó²¿·Ö¼ÇÂ¼ÈëÎÄ¼şµÄÊôĞÔ¡£
+*               å¢åŠ éƒ¨åˆ†è®°å½•å…¥æ–‡ä»¶çš„å±æ€§ã€‚
 *           2007.09.24
-*               Ôö¼Ó DUMP_TO_FILE Ìõ¼ş£¬¿ÉÍ¬Ê±½«ĞÅÏ¢¼ÇÂ¼ÈëÎÄ¼şÖĞ¡£
+*               å¢åŠ  DUMP_TO_FILE æ¡ä»¶ï¼Œå¯åŒæ—¶å°†ä¿¡æ¯è®°å½•å…¥æ–‡ä»¶ä¸­ã€‚
 *           2007.01.05
-*               Ôö¼Ó ALLDEBUG Ìõ¼ş£¬µÈÍ¬ÓÚ DEBUG Óë SUPPORT_EVALUATE¡£
+*               å¢åŠ  ALLDEBUG æ¡ä»¶ï¼Œç­‰åŒäº DEBUG ä¸ SUPPORT_EVALUATEã€‚
 *           2006.11.11
-*               Ôö¼ÓÔËĞĞÆÚ²é¿´¶ÔÏó RTTI ĞÅÏ¢µÄ¹¦ÄÜ£¬ĞèÒª¶¨Òå SUPPORT_EVALUATE¡£
+*               å¢åŠ è¿è¡ŒæœŸæŸ¥çœ‹å¯¹è±¡ RTTI ä¿¡æ¯çš„åŠŸèƒ½ï¼Œéœ€è¦å®šä¹‰ SUPPORT_EVALUATEã€‚
 *           2006.10.11
-*               Ôö¼ÓÒ»ÏûÏ¢ÀàĞÍ£¬ĞŞ¸ÄÎªÈ«¾Ö¶ÔÏó¡£
+*               å¢åŠ ä¸€æ¶ˆæ¯ç±»å‹ï¼Œä¿®æ”¹ä¸ºå…¨å±€å¯¹è±¡ã€‚
 *           2006.07.16
-*               Ôö¼ÓÁËÈı¸öÏûÏ¢Í³¼ÆÊôĞÔ¡£
+*               å¢åŠ äº†ä¸‰ä¸ªæ¶ˆæ¯ç»Ÿè®¡å±æ€§ã€‚
 *           2005.02.27
-*               Ôö¼ÓÁËÀàËÆÓÚ Overseer µÄ JclExcept ¼ÇÂ¼¹¦ÄÜ£¬ĞèÒª°²×° JCL ¿â¡£
-*               Èç²»°²×° JCL ¿â£¬ÔòĞèÒª´Ó JCL ¿âÖĞ¸´ÖÆÒÔÏÂÎÄ¼şÀ´²ÎÓë±àÒë£º
+*               å¢åŠ äº†ç±»ä¼¼äº Overseer çš„ JclExcept è®°å½•åŠŸèƒ½ï¼Œéœ€è¦å®‰è£… JCL åº“ã€‚
+*               å¦‚ä¸å®‰è£… JCL åº“ï¼Œåˆ™éœ€è¦ä» JCL åº“ä¸­å¤åˆ¶ä»¥ä¸‹æ–‡ä»¶æ¥å‚ä¸ç¼–è¯‘ï¼š
 *           INC:crossplatform.inc, jcl.inc, jedi.inc, windowsonly.inc
 *           PAS:Jcl8087, JclBase, JclConsole, JclDateTime,
 *               JclDebug, JclFileUtils, JclHookExcept,
@@ -70,10 +70,10 @@ unit CnDebug;
 *               JclRegistry, JclResources, JclSecurity, JclShell,
 *               JclStrings, JclSynch, JclSysInfo, JclSysUtils,
 *               JclTD32, JclWideStrings, JclWin32, Snmp;
-*           ²¢´ò¿ª±àÒëÑ¡Ïî Include TD32 debug Info »òÉú³É MapFile ÒÔ»ñµÃ¸ü¶àĞÅÏ¢
-*               (ÒÔ JCL 1.94 °æÎª×¼)
+*           å¹¶æ‰“å¼€ç¼–è¯‘é€‰é¡¹ Include TD32 debug Info æˆ–ç”Ÿæˆ MapFile ä»¥è·å¾—æ›´å¤šä¿¡æ¯
+*               (ä»¥ JCL 1.94 ç‰ˆä¸ºå‡†)
 *           2004.12.22 V1.0
-*               ´´½¨µ¥Ôª,ÊµÏÖ¹¦ÄÜ
+*               åˆ›å»ºå•å…ƒ,å®ç°åŠŸèƒ½
 ================================================================================
 |</PRE>}
 
@@ -82,11 +82,11 @@ interface
 {$I CnPack.inc}
 
 // {$DEFINE DUMP_TO_FILE}
-// ¶¨Òå´ËÌõ¼ş¿ÉÖØ¶¨Ïòµ½ÎÄ¼ş.
+// å®šä¹‰æ­¤æ¡ä»¶å¯é‡å®šå‘åˆ°æ–‡ä»¶.
 // Define this flag to log message to a file.
 
 // {$DEFINE LOCAL_SESSION}
-// ¶¨Òå´ËÌõ¼ş¿É½«·¢ËÍÏŞÖÆÔÚµ±Ç°ÓÃ»§»á»°ÄÚ£¬²»×ßÈ«¾Ö£¬ÏàÓ¦µÄ DebugViewer Ò²ĞèÒª¸Ä¶¯
+// å®šä¹‰æ­¤æ¡ä»¶å¯å°†å‘é€é™åˆ¶åœ¨å½“å‰ç”¨æˆ·ä¼šè¯å†…ï¼Œä¸èµ°å…¨å±€ï¼Œç›¸åº”çš„ DebugViewer ä¹Ÿéœ€è¦æ”¹åŠ¨
 // Define this flag to use local session, not global.
 
 {$IFDEF NDEBUG}
@@ -114,10 +114,10 @@ uses
   ;
 
 const
-  CnMaxTagLength = 8; // ²»¿É¸Ä±ä
+  CnMaxTagLength = 8; // ä¸å¯æ”¹å˜
   CnMaxMsgLength = 4096;
   CnDebugMagicLength = 8;
-  CnDebugMapEnabled = $7F3D92E0; // ¶¨ÒåµÄÒ»¸ö Magic Öµ±íÊ¾ MapEnable
+  CnDebugMapEnabled = $7F3D92E0; // å®šä¹‰çš„ä¸€ä¸ª Magic å€¼è¡¨ç¤º MapEnable
 
 {$IFDEF LOCAL_SESSION}
   SCnDebugPrefix = '';
@@ -133,54 +133,54 @@ const
   SCnDefaultDumpFileName = 'CnDebugDump.cdd';
 
 type
-  // ===================== ÒÔÏÂ½á¹¹¶¨ÒåĞèÒªºÍ Viewer ¹²Ïí ======================
+  // ===================== ä»¥ä¸‹ç»“æ„å®šä¹‰éœ€è¦å’Œ Viewer å…±äº« ======================
 
-  // Êä³öµÄĞÅÏ¢ÀàĞÍ
+  // è¾“å‡ºçš„ä¿¡æ¯ç±»å‹
   TCnMsgType = (cmtInformation, cmtWarning, cmtError, cmtSeparator, cmtEnterProc,
     cmtLeaveProc, cmtTimeMarkStart, cmtTimeMarkStop, cmtMemoryDump, cmtException,
     cmtObject, cmtComponent, cmtCustom, cmtSystem);
   TCnMsgTypes = set of TCnMsgType;
 
-  // Ê±¼ä´Á¸ñÊ½ÀàĞÍ
+  // æ—¶é—´æˆ³æ ¼å¼ç±»å‹
   TCnTimeStampType = (ttNone, ttDateTime, ttTickCount, ttCPUPeriod);
 
   {$NODEFINE TCnMsgAnnex}
   TCnMsgAnnex = packed record
-  {* ·ÅÈëÊı¾İÇøµÄÃ¿ÌõĞÅÏ¢µÄÍ·ÃèÊö½á¹¹ }
-    Level:     Integer;                            // ×Ô¶¨Òå Level Êı£¬¹©ÓÃ»§¹ıÂËÓÃ
-    Indent:    Integer;                            // Ëõ½øÊıÄ¿£¬ÓÉ Enter ºÍ Leave ¿ØÖÆ
-    ProcessId: DWORD;                              // µ÷ÓÃÕßµÄ½ø³Ì ID
-    ThreadId:  DWORD;                              // µ÷ÓÃÕßµÄÏß³Ì ID
-    Tag: array[0..CnMaxTagLength - 1] of AnsiChar; // ×Ô¶¨Òå Tag Öµ£¬¹©ÓÃ»§¹ıÂËÓÃ
-    MsgType:   DWORD;                              // ÏûÏ¢ÀàĞÍ
-    MsgCPInterval: DWORD;                          // ¼ÆÊ±½áÊøÊ±µÄ CPU ÖÜÆÚÊı
-    TimeStampType: DWORD;                          // ÏûÏ¢Êä³öµÄÊ±¼ä´ÁÀàĞÍ
+  {* æ”¾å…¥æ•°æ®åŒºçš„æ¯æ¡ä¿¡æ¯çš„å¤´æè¿°ç»“æ„ }
+    Level:     Integer;                            // è‡ªå®šä¹‰ Level æ•°ï¼Œä¾›ç”¨æˆ·è¿‡æ»¤ç”¨
+    Indent:    Integer;                            // ç¼©è¿›æ•°ç›®ï¼Œç”± Enter å’Œ Leave æ§åˆ¶
+    ProcessId: DWORD;                              // è°ƒç”¨è€…çš„è¿›ç¨‹ ID
+    ThreadId:  DWORD;                              // è°ƒç”¨è€…çš„çº¿ç¨‹ ID
+    Tag: array[0..CnMaxTagLength - 1] of AnsiChar; // è‡ªå®šä¹‰ Tag å€¼ï¼Œä¾›ç”¨æˆ·è¿‡æ»¤ç”¨
+    MsgType:   DWORD;                              // æ¶ˆæ¯ç±»å‹
+    MsgCPInterval: DWORD;                          // è®¡æ—¶ç»“æŸæ—¶çš„ CPU å‘¨æœŸæ•°
+    TimeStampType: DWORD;                          // æ¶ˆæ¯è¾“å‡ºçš„æ—¶é—´æˆ³ç±»å‹
     case Integer of
-      1: (MsgDateTime:   TDateTime);               // ÏûÏ¢Êä³öµÄÊ±¼ä´ÁÖµ DateTime
-      2: (MsgTickCount:  DWORD);                   // ÏûÏ¢Êä³öµÄÊ±¼ä´ÁÖµ TickCount
-      3: (MsgCPUPeriod:  Int64);                   // ÏûÏ¢Êä³öµÄÊ±¼ä´ÁÖµ CPU ÖÜÆÚ
+      1: (MsgDateTime:   TDateTime);               // æ¶ˆæ¯è¾“å‡ºçš„æ—¶é—´æˆ³å€¼ DateTime
+      2: (MsgTickCount:  DWORD);                   // æ¶ˆæ¯è¾“å‡ºçš„æ—¶é—´æˆ³å€¼ TickCount
+      3: (MsgCPUPeriod:  Int64);                   // æ¶ˆæ¯è¾“å‡ºçš„æ—¶é—´æˆ³å€¼ CPU å‘¨æœŸ
   end;
 
   {$NODEFINE TCnMsgDesc}
   {$NODEFINE PCnMsgDesc}
   TCnMsgDesc = packed record
-  {* ·ÅÈëÊı¾İÇøµÄÃ¿ÌõĞÅÏ¢µÄÃèÊö½á¹¹£¬°üÀ¨Ò»ĞÅÏ¢Í·}
-    Length: Integer;                               // ×Ü³¤¶È£¬°üÀ¨ĞÅÏ¢Í·
-    Annex: TCnMsgAnnex;                            // Ò»¸öĞÅÏ¢Í·
-    Msg: array[0..CnMaxMsgLength - 1] of AnsiChar; // ĞèÒª¼ÇÂ¼µÄĞÅÏ¢
+  {* æ”¾å…¥æ•°æ®åŒºçš„æ¯æ¡ä¿¡æ¯çš„æè¿°ç»“æ„ï¼ŒåŒ…æ‹¬ä¸€ä¿¡æ¯å¤´}
+    Length: Integer;                               // æ€»é•¿åº¦ï¼ŒåŒ…æ‹¬ä¿¡æ¯å¤´
+    Annex: TCnMsgAnnex;                            // ä¸€ä¸ªä¿¡æ¯å¤´
+    Msg: array[0..CnMaxMsgLength - 1] of AnsiChar; // éœ€è¦è®°å½•çš„ä¿¡æ¯
   end;
   PCnMsgDesc = ^TCnMsgDesc;
 
   {$NODEFINE TCnMapFilter}
   {$NODEFINE PCnMapFilter}
   TCnMapFilter = packed record
-  {* ÓÃÄÚ´æÓ³ÉäÎÄ¼ş´«ËÍÊı¾İÊ±µÄÄÚ´æÇøÍ·ÖĞµÄ¹ıÂËÆ÷¸ñÊ½}
-    NeedRefresh: DWORD;                            // ·Ç 0 Ê±ĞèÒª¸üĞÂ
-    Enabled: Integer;                              // ·Ç 0 Ê±±íÊ¾Ê¹ÄÜ
-    Level: Integer;                                // ÏŞ¶¨µÄ Level
-    Tag: array[0..CnMaxTagLength - 1] of AnsiChar; // ÏŞ¶¨µÄ Tag
+  {* ç”¨å†…å­˜æ˜ å°„æ–‡ä»¶ä¼ é€æ•°æ®æ—¶çš„å†…å­˜åŒºå¤´ä¸­çš„è¿‡æ»¤å™¨æ ¼å¼}
+    NeedRefresh: DWORD;                            // é 0 æ—¶éœ€è¦æ›´æ–°
+    Enabled: Integer;                              // é 0 æ—¶è¡¨ç¤ºä½¿èƒ½
+    Level: Integer;                                // é™å®šçš„ Level
+    Tag: array[0..CnMaxTagLength - 1] of AnsiChar; // é™å®šçš„ Tag
     case Integer of
-      0: (MsgTypes: TCnMsgTypes);                  // ÏŞ¶¨µÄ MsgTypes
+      0: (MsgTypes: TCnMsgTypes);                  // é™å®šçš„ MsgTypes
       1: (DummyPlace: DWORD);
   end;
   PCnMapFilter = ^TCnMapFilter;
@@ -188,18 +188,18 @@ type
   {$NODEFINE TCnMapHeader}
   {$NODEFINE PCnMapHeader}
   TCnMapHeader = packed record
-  {* ÓÃÄÚ´æÓ³ÉäÎÄ¼ş´«ËÍÊı¾İÊ±µÄÄÚ´æÇøÍ·¸ñÊ½}
+  {* ç”¨å†…å­˜æ˜ å°„æ–‡ä»¶ä¼ é€æ•°æ®æ—¶çš„å†…å­˜åŒºå¤´æ ¼å¼}
     MagicName:  array[0..CnDebugMagicLength - 1] of AnsiChar;  // 'CNDEBUG'
-    MapEnabled: DWORD;              // ÎªÒ» CnDebugMapEnabled Ê±£¬±íÊ¾ÇøÓò¿ÉÓÃ
-    MapSize:    DWORD;              // Õû¸ö Map µÄ´óĞ¡£¬²»°üÀ¨Î²±£»¤Çø
-    DataOffset: Integer;            // Êı¾İÇøÏà¶ÔÓÚÍ·²¿µÄÆ«ÒÆÁ¿£¬Ä¿Ç°¶¨Îª 64
-    QueueFront: Integer;            // ¶ÓÁĞÍ·Ö¸Õë£¬ÊÇÏà¶ÔÓÚÊı¾İÇøµÄÆ«ÒÆÁ¿
-    QueueTail:  Integer;            // ¶ÓÁĞÎ²Ö¸Õë£¬ÊÇÏà¶ÔÓÚÊı¾İÇøµÄÆ«ÒÆÁ¿
-    Filter: TCnMapFilter;           // Viewer ¶ËÉèÖÃµÄ¹ıÂËÆ÷
+    MapEnabled: DWORD;              // ä¸ºä¸€ CnDebugMapEnabled æ—¶ï¼Œè¡¨ç¤ºåŒºåŸŸå¯ç”¨
+    MapSize:    DWORD;              // æ•´ä¸ª Map çš„å¤§å°ï¼Œä¸åŒ…æ‹¬å°¾ä¿æŠ¤åŒº
+    DataOffset: Integer;            // æ•°æ®åŒºç›¸å¯¹äºå¤´éƒ¨çš„åç§»é‡ï¼Œç›®å‰å®šä¸º 64
+    QueueFront: Integer;            // é˜Ÿåˆ—å¤´æŒ‡é’ˆï¼Œæ˜¯ç›¸å¯¹äºæ•°æ®åŒºçš„åç§»é‡
+    QueueTail:  Integer;            // é˜Ÿåˆ—å°¾æŒ‡é’ˆï¼Œæ˜¯ç›¸å¯¹äºæ•°æ®åŒºçš„åç§»é‡
+    Filter: TCnMapFilter;           // Viewer ç«¯è®¾ç½®çš„è¿‡æ»¤å™¨
   end;
   PCnMapHeader = ^TCnMapHeader;
 
-  // ===================== ÒÔÉÏ½á¹¹¶¨ÒåĞèÒªºÍ Viewer ¹²Ïí ======================
+  // ===================== ä»¥ä¸Šç»“æ„å®šä¹‰éœ€è¦å’Œ Viewer å…±äº« ======================
 
   TCnTimeDesc = packed record
     Tag: array[0..CnMaxTagLength - 1] of AnsiChar;
@@ -210,7 +210,7 @@ type
   PCnTimeDesc = ^TCnTimeDesc;
 
   TCnDebugFilter = class(TObject)
-  {* ĞÅÏ¢Êä³öµÄ¹ıÂËÌõ¼ş}
+  {* ä¿¡æ¯è¾“å‡ºçš„è¿‡æ»¤æ¡ä»¶}
   private
     FLevel: Integer;
     FTag: string;
@@ -236,7 +236,7 @@ type
     FCSThrdId: TRTLCriticalSection;
     FAutoStart: Boolean;
     FViewerAutoStartCalled: Boolean;
-    // ÄÚ²¿±äÁ¿£¬¿ØÖÆ²»³¯ Viewer Êä³ö
+    // å†…éƒ¨å˜é‡ï¼Œæ§åˆ¶ä¸æœ Viewer è¾“å‡º
     FIgnoreViewer: Boolean;
     FExceptFilter: TStringList;
     FExceptTracking: Boolean;
@@ -273,20 +273,20 @@ type
     function GetPostedMessageCount: Integer;
   protected
     function CheckEnabled: Boolean;
-    {* ¼ì²âµ±Ç°Êä³ö¹¦ÄÜÊÇ·ñÊ¹ÄÜ }
+    {* æ£€æµ‹å½“å‰è¾“å‡ºåŠŸèƒ½æ˜¯å¦ä½¿èƒ½ }
     function CheckFiltered(const Tag: string; Level: Byte; AType: TCnMsgType): Boolean;
-    {* ¼ì²âµ±Ç°Êä³öĞÅÏ¢ÊÇ·ñ±»ÔÊĞíÊä³ö£¬True ÔÊĞí£¬False ÔÊĞí }
+    {* æ£€æµ‹å½“å‰è¾“å‡ºä¿¡æ¯æ˜¯å¦è¢«å…è®¸è¾“å‡ºï¼ŒTrue å…è®¸ï¼ŒFalse å…è®¸ }
 
-    // ´¦Àí Indent
+    // å¤„ç† Indent
     function GetCurrentIndent(ThrdID: DWORD): Integer;
     function IncIndent(ThrdID: DWORD): Integer;
     function DecIndent(ThrdID: DWORD): Integer;
 
-    // ´¦Àí¼ÆÊ±
+    // å¤„ç†è®¡æ—¶
     function IndexOfTime(const ATag: string): PCnTimeDesc;
     function AddTimeDesc(const ATag: string): PCnTimeDesc;
 
-    // Í³Ò»´¦Àí Format
+    // ç»Ÿä¸€å¤„ç† Format
     function FormatMsg(const AFormat: string; Args: array of const): string;
     function FormatConstArray(Args: array of const): string;
     function FormatInterfaceString(AIntf: IUnknown): string;
@@ -304,17 +304,17 @@ type
 
     procedure StartDebugViewer;
 
-    // ÀûÓÃ CPU ÖÜÆÚ¼ÆÊ± == Start ==
+    // åˆ©ç”¨ CPU å‘¨æœŸè®¡æ—¶ == Start ==
     procedure StartTimeMark(const ATag: Integer; const AMsg: string = ''); overload;
     procedure StopTimeMark(const ATag: Integer; const AMsg: string = ''); overload;
-    {* ´ËÁ½º¯Êı²»Ê¹ÓÃ¾Ö²¿×Ö·û´®±äÁ¿£¬Îó²îÏà¶Ô½ÏĞ¡£¬ËùÒÔÍÆ¼öÊ¹ÓÃ}
+    {* æ­¤ä¸¤å‡½æ•°ä¸ä½¿ç”¨å±€éƒ¨å­—ç¬¦ä¸²å˜é‡ï¼Œè¯¯å·®ç›¸å¯¹è¾ƒå°ï¼Œæ‰€ä»¥æ¨èä½¿ç”¨}
 
-    // ÒÔÏÂÁ½º¯ÊıÓÉÓÚÊ¹ÓÃÁË Delphi ×Ö·û´®£¬Îó²î½Ï´ó£¨¼¸Íò×óÓÒ¸ö CPU ÖÜÆÚ£©
+    // ä»¥ä¸‹ä¸¤å‡½æ•°ç”±äºä½¿ç”¨äº† Delphi å­—ç¬¦ä¸²ï¼Œè¯¯å·®è¾ƒå¤§ï¼ˆå‡ ä¸‡å·¦å³ä¸ª CPU å‘¨æœŸï¼‰
     procedure StartTimeMark(const ATag: string; const AMsg: string = ''); overload;
     procedure StopTimeMark(const ATag: string; const AMsg: string = ''); overload;
-    // ÀûÓÃ CPU ÖÜÆÚ¼ÆÊ± == End ==
+    // åˆ©ç”¨ CPU å‘¨æœŸè®¡æ—¶ == End ==
 
-    // Log ÏµÁĞÊä³öº¯Êı == Start ==
+    // Log ç³»åˆ—è¾“å‡ºå‡½æ•° == Start ==
     procedure LogMsg(const AMsg: string);
     procedure LogMsgWithTag(const AMsg: string; const ATag: string);
     procedure LogMsgWithLevel(const AMsg: string; ALevel: Integer);
@@ -333,7 +333,7 @@ type
     procedure LogEnter(const AProcName: string; const ATag: string = '');
     procedure LogLeave(const AProcName: string; const ATag: string = '');
 
-    // ¶îÍâ¸¨ÖúµÄÊä³öº¯Êı
+    // é¢å¤–è¾…åŠ©çš„è¾“å‡ºå‡½æ•°
     procedure LogMsgWarning(const AMsg: string);
     procedure LogMsgError(const AMsg: string);
     procedure LogErrorFmt(const AFormat: string; Args: array of const);
@@ -371,9 +371,9 @@ type
     procedure LogClass(const AClass: TClass; const AMsg: string = '');
     procedure LogInterface(const AIntf: IUnknown; const AMsg: string = '');
     procedure LogStackFromAddress(Addr: Pointer; const AMsg: string = '');
-    // Log ÏµÁĞÊä³öº¯Êı == End ==
+    // Log ç³»åˆ—è¾“å‡ºå‡½æ•° == End ==
 
-    // Trace ÏµÁĞÊä³öº¯Êı == Start ==
+    // Trace ç³»åˆ—è¾“å‡ºå‡½æ•° == Start ==
     procedure TraceMsg(const AMsg: string);
     procedure TraceMsgWithTag(const AMsg: string; const ATag: string);
     procedure TraceMsgWithLevel(const AMsg: string; ALevel: Integer);
@@ -392,7 +392,7 @@ type
     procedure TraceEnter(const AProcName: string; const ATag: string = '');
     procedure TraceLeave(const AProcName: string; const ATag: string = '');
 
-    // ¶îÍâ¸¨ÖúµÄÊä³öº¯Êı
+    // é¢å¤–è¾…åŠ©çš„è¾“å‡ºå‡½æ•°
     procedure TraceMsgWarning(const AMsg: string);
     procedure TraceMsgError(const AMsg: string);
     procedure TraceErrorFmt(const AFormat: string; Args: array of const);
@@ -429,91 +429,91 @@ type
     procedure TraceClass(const AClass: TClass; const AMsg: string = '');
     procedure TraceInterface(const AIntf: IUnknown; const AMsg: string = '');
     procedure TraceStackFromAddress(Addr: Pointer; const AMsg: string = '');
-    // Trace ÏµÁĞÊä³öº¯Êı == End ==
+    // Trace ç³»åˆ—è¾“å‡ºå‡½æ•° == End ==
 
-    // Òì³£¹ıÂËº¯Êı
+    // å¼‚å¸¸è¿‡æ»¤å‡½æ•°
     procedure AddFilterExceptClass(E: ExceptClass); overload;
     procedure RemoveFilterExceptClass(E: ExceptClass); overload;
     procedure AddFilterExceptClass(const EClassName: string); overload;
     procedure RemoveFilterExceptClass(const EClassName: string); overload;
 
-    // ²é¿´¶ÔÏóº¯Êı
+    // æŸ¥çœ‹å¯¹è±¡å‡½æ•°
     procedure EvaluateObject(AObject: TObject); overload;
     procedure EvaluateObject(APointer: Pointer); overload;
 
-    // ÆäËûÊôĞÔ
+    // å…¶ä»–å±æ€§
     property Channel: TCnDebugChannel read GetChannel;
     property Filter: TCnDebugFilter read GetFilter;
 
     property Active: Boolean read GetActive write SetActive;
-    {* ÊÇ·ñÊ¹ÄÜ£¬Ò²¾ÍÊÇÊÇ·ñÊä³öĞÅÏ¢}
+    {* æ˜¯å¦ä½¿èƒ½ï¼Œä¹Ÿå°±æ˜¯æ˜¯å¦è¾“å‡ºä¿¡æ¯}
     property ExceptTracking: Boolean read GetExceptTracking write SetExceptTracking;
-    {* ÊÇ·ñ²¶×½Òì³£}
+    {* æ˜¯å¦æ•æ‰å¼‚å¸¸}
     property AutoStart: Boolean read GetAutoStart write SetAutoStart;
-    {* ÊÇ·ñ×Ô¶¯Æô¶¯ Viewer}
+    {* æ˜¯å¦è‡ªåŠ¨å¯åŠ¨ Viewer}
 
     property DumpToFile: Boolean read GetDumpToFile write SetDumpToFile;
-    {* ÊÇ·ñ°ÑÊä³öĞÅÏ¢Í¬Ê±Êä³öµ½ÎÄ¼ş}
+    {* æ˜¯å¦æŠŠè¾“å‡ºä¿¡æ¯åŒæ—¶è¾“å‡ºåˆ°æ–‡ä»¶}
     property DumpFileName: string read GetDumpFileName write SetDumpFileName;
-    {* Êä³öµÄÎÄ¼şÃû}
+    {* è¾“å‡ºçš„æ–‡ä»¶å}
     property UseAppend: Boolean read GetUseAppend write SetUseAppend;
-    {* Ã¿´ÎÔËĞĞÊ±£¬Èç¹ûÎÄ¼şÒÑ´æÔÚ£¬ÊÇ·ñ×·¼Óµ½ÒÑÓĞÄÚÈİºó»¹ÊÇÖØĞ´}
+    {* æ¯æ¬¡è¿è¡Œæ—¶ï¼Œå¦‚æœæ–‡ä»¶å·²å­˜åœ¨ï¼Œæ˜¯å¦è¿½åŠ åˆ°å·²æœ‰å†…å®¹åè¿˜æ˜¯é‡å†™}
 
-    // Êä³öÏûÏ¢Í³¼Æ
+    // è¾“å‡ºæ¶ˆæ¯ç»Ÿè®¡
     property MessageCount: Integer read GetMessageCount;
-    {* µ÷ÓÃ¶øÊä³öµÄ²ğ°üÏûÏ¢Êı¡£×¢ÒâÒ»Ìõ³¤ÏûÏ¢¿ÉÄÜ»á±»²ğ°ü²ğ³É¶àÌõÏûÏ¢}
+    {* è°ƒç”¨è€Œè¾“å‡ºçš„æ‹†åŒ…æ¶ˆæ¯æ•°ã€‚æ³¨æ„ä¸€æ¡é•¿æ¶ˆæ¯å¯èƒ½ä¼šè¢«æ‹†åŒ…æ‹†æˆå¤šæ¡æ¶ˆæ¯}
     property PostedMessageCount: Integer read GetPostedMessageCount;
-    {* Êµ¼ÊÊä³ö³É¹¦µÄ²ğ°üºóµÄÏûÏ¢Êı¡£}
+    {* å®é™…è¾“å‡ºæˆåŠŸçš„æ‹†åŒ…åçš„æ¶ˆæ¯æ•°ã€‚}
     property DiscardedMessageCount: Integer read GetDiscardedMessageCount;
-    {* Î´Êä³öµÄ²ğ°üÏûÏ¢Êı¡£}
+    {* æœªè¾“å‡ºçš„æ‹†åŒ…æ¶ˆæ¯æ•°ã€‚}
   end;
 
   TCnDebugChannel = class(TObject)
-  {* ĞÅÏ¢Êä³ö Channel µÄ³éÏóÀà}
+  {* ä¿¡æ¯è¾“å‡º Channel çš„æŠ½è±¡ç±»}
   private
     FAutoFlush: Boolean;
     FActive: Boolean;
     procedure SetAutoFlush(const Value: Boolean);
   protected
     procedure SetActive(const Value: Boolean); virtual;
-    // ¹©×ÓÀàÖØÔØÒÔ´¦Àí Active ±ä»¯
+    // ä¾›å­ç±»é‡è½½ä»¥å¤„ç† Active å˜åŒ–
     function CheckReady: Boolean; virtual;
-    // ¼ì²âÊÇ·ñ×¼±¸ºÃ
+    // æ£€æµ‹æ˜¯å¦å‡†å¤‡å¥½
     procedure UpdateFlush; virtual;
-    // AutoFlush ÊôĞÔ¸üĞÂÊ±¹©×ÓÀàÖØÔØÒÔ½øĞĞ´¦Àí
+    // AutoFlush å±æ€§æ›´æ–°æ—¶ä¾›å­ç±»é‡è½½ä»¥è¿›è¡Œå¤„ç†
   public
     constructor Create(IsAutoFlush: Boolean = True); virtual;
-    // ¹¹Ôìº¯Êı£¬²ÎÊıÎªÊÇ·ñ×Ô¶¯ËÍ³ö²¢µÈ´ı½ÓÊÕÍê³É
+    // æ„é€ å‡½æ•°ï¼Œå‚æ•°ä¸ºæ˜¯å¦è‡ªåŠ¨é€å‡ºå¹¶ç­‰å¾…æ¥æ”¶å®Œæˆ
     procedure StartDebugViewer; virtual;
-    // Æô¶¯ Debug Viewer ²¢µÈ´ıÆäÆô¶¯Íê³É
+    // å¯åŠ¨ Debug Viewer å¹¶ç­‰å¾…å…¶å¯åŠ¨å®Œæˆ
     function CheckFilterChanged: Boolean; virtual;
-    // ¼ì²â¹ıÂËÌõ¼şÊÇ·ñ¸Ä±ä
+    // æ£€æµ‹è¿‡æ»¤æ¡ä»¶æ˜¯å¦æ”¹å˜
     procedure RefreshFilter(Filter: TCnDebugFilter); virtual;
-    // ¹ıÂËÌõ¼ş¸Ä±äÊ±ÖØĞÂÔØÈë
+    // è¿‡æ»¤æ¡ä»¶æ”¹å˜æ—¶é‡æ–°è½½å…¥
     procedure SendContent(var MsgDesc; Size: Integer); virtual;
-    // ·¢ËÍĞÅÏ¢ÄÚÈİ
+    // å‘é€ä¿¡æ¯å†…å®¹
     property Active: Boolean read FActive write SetActive;
-    // ÊÇ·ñ¼¤»î
+    // æ˜¯å¦æ¿€æ´»
     property AutoFlush: Boolean read FAutoFlush write SetAutoFlush;
-    // ÊÇ·ñ×Ô¶¯ËÍ³ö²¢µÈ½ÓÊÕ·½½ÓÊÕ
+    // æ˜¯å¦è‡ªåŠ¨é€å‡ºå¹¶ç­‰æ¥æ”¶æ–¹æ¥æ”¶
   end;
 
   TCnDebugChannelClass = class of TCnDebugChannel;
 
   TCnMapFileChannel = class(TCnDebugChannel)
-  {* Ê¹ÓÃÄÚ´æÓ³ÉäÎÄ¼şÀ´´«ÊäÊı¾İµÄ Channel ÊµÏÖÀà}
+  {* ä½¿ç”¨å†…å­˜æ˜ å°„æ–‡ä»¶æ¥ä¼ è¾“æ•°æ®çš„ Channel å®ç°ç±»}
   private
-    FMap: THandle;               // ÄÚ´æÓ³ÉäÎÄ¼ş Handle
-    FQueueEvent: THandle;        // ¶ÓÁĞĞ´³É¹¦ÊÂ¼ş
-    FQueueFlush: THandle;        // ¶ÓÁĞÒ»ÔªËØ±»¶ÁÍê³ÉÊÂ¼ş
-    FMapSize:   Integer;         // Õû¸ö Map µÄ´óĞ¡
-    FQueueSize: Integer;         // Êı¾İÇø´óĞ¡
-    FMapHeader: Pointer;         // Map ÇøÖ¸Õë£¬Ò²ÊÇÍ·Ö¸Õë
-    FMsgBase:   Pointer;         // Map µÄÊı¾İÇøÖ¸Õë
-    FFront:     Integer;         // ¶ÓÁĞÍ·Ö¸Õë£¬Ò²ÊÇÏà¶ÔÓÚÊı¾İÇøµÄÆ«ÒÆÁ¿
-    FTail:      Integer;         // ¶ÓÁĞÎ²Ö¸Õë£¬Ò²ÊÇÏà¶ÔÓÚÊı¾İÇøµÄÆ«ÒÆÁ¿
+    FMap: THandle;               // å†…å­˜æ˜ å°„æ–‡ä»¶ Handle
+    FQueueEvent: THandle;        // é˜Ÿåˆ—å†™æˆåŠŸäº‹ä»¶
+    FQueueFlush: THandle;        // é˜Ÿåˆ—ä¸€å…ƒç´ è¢«è¯»å®Œæˆäº‹ä»¶
+    FMapSize:   Integer;         // æ•´ä¸ª Map çš„å¤§å°
+    FQueueSize: Integer;         // æ•°æ®åŒºå¤§å°
+    FMapHeader: Pointer;         // Map åŒºæŒ‡é’ˆï¼Œä¹Ÿæ˜¯å¤´æŒ‡é’ˆ
+    FMsgBase:   Pointer;         // Map çš„æ•°æ®åŒºæŒ‡é’ˆ
+    FFront:     Integer;         // é˜Ÿåˆ—å¤´æŒ‡é’ˆï¼Œä¹Ÿæ˜¯ç›¸å¯¹äºæ•°æ®åŒºçš„åç§»é‡
+    FTail:      Integer;         // é˜Ÿåˆ—å°¾æŒ‡é’ˆï¼Œä¹Ÿæ˜¯ç›¸å¯¹äºæ•°æ®åŒºçš„åç§»é‡
 
-    function IsInitedFromHeader: Boolean;  // ¼ì²â²¢ÔØÈëÍ·ĞÅÏ¢
+    function IsInitedFromHeader: Boolean;  // æ£€æµ‹å¹¶è½½å…¥å¤´ä¿¡æ¯
     procedure DestroyHandles;
     procedure LoadQueuePtr;
     procedure SaveQueuePtr(SaveFront: Boolean = False);
@@ -533,7 +533,7 @@ function CnDebugger: TCnDebugger;
 
 var
   CnDebugChannelClass: TCnDebugChannelClass = TCnMapFileChannel;
-  // µ±Ç° Channel µÄ Class
+  // å½“å‰ Channel çš„ Class
 
   CnDebugMagicName: string = 'CNDEBUG';
 
@@ -590,9 +590,9 @@ const
   SCnStackTraceNil = 'No Stack Trace.';
   SCnStackTraceNotSupport = 'Stack Trace NOT Support.';
 
-  CnDebugWaitingMutexTime = 1000;  // Mutex µÄµÈ´ıÊ±¼ä¶¥¶à 1 Ãë
-  CnDebugStartingEventTime = 5000; // Æô¶¯ Viewer µÄ Event µÄµÈ´ıÊ±¼ä¶¥¶à 5 Ãë
-  CnDebugFlushEventTime = 100;     // Ğ´¶ÓÁĞºóµÈ´ı¶ÁÈ¡Íê³ÉµÄÊ±¼ä¶¥¶à 0.1 Ãë
+  CnDebugWaitingMutexTime = 1000;  // Mutex çš„ç­‰å¾…æ—¶é—´é¡¶å¤š 1 ç§’
+  CnDebugStartingEventTime = 5000; // å¯åŠ¨ Viewer çš„ Event çš„ç­‰å¾…æ—¶é—´é¡¶å¤š 5 ç§’
+  CnDebugFlushEventTime = 100;     // å†™é˜Ÿåˆ—åç­‰å¾…è¯»å–å®Œæˆçš„æ—¶é—´é¡¶å¤š 0.1 ç§’
 
 {$IFDEF WIN64}
   CN_HEX_DIGITS = 16;
@@ -621,7 +621,7 @@ type
 
 var
   FCnDebugger: TCnDebugger = nil;
-  FStartCriticalSection: TRTLCriticalSection; // ÓÃÓÚ¶àÏß³ÌÄÚ¿ØÖÆÆô¶¯ CnDebugViewer
+  FStartCriticalSection: TRTLCriticalSection; // ç”¨äºå¤šçº¿ç¨‹å†…æ§åˆ¶å¯åŠ¨ CnDebugViewer
 
   FFixedCalling: Cardinal = 0;
 
@@ -677,7 +677,7 @@ begin
   Result := string(TypeInfo^.Name);
 end;
 
-// ÒÆÖ²×Ô A.Bouchez µÄÊµÏÖ
+// ç§»æ¤è‡ª A.Bouchez çš„å®ç°
 function ObjectFromInterface(const AIntf: IUnknown): TObject;
 begin
   Result := nil;
@@ -696,7 +696,7 @@ begin
 {$ENDIF}
 end;
 
-// ÒÆÖ²×Ô uDbg
+// ç§»æ¤è‡ª uDbg
 procedure AddObjectToStringList(PropOwner: TObject; List: TStrings; Level: Integer);
 type
   TIntegerSet = set of 0..SizeOf(Integer) * 8 - 1; // see Classes.pas
@@ -960,7 +960,7 @@ end;
 constructor TCnDebugger.Create;
 begin
   inherited;
-  FAutoStart := True; // ÊÇ·ñÓĞÊä³öÊ±×Ô¶¯Æô¶¯ Viewer
+  FAutoStart := True; // æ˜¯å¦æœ‰è¾“å‡ºæ—¶è‡ªåŠ¨å¯åŠ¨ Viewer
   FIndentList := TList.Create;
   FThrdIDList := TList.Create;
   FTimes := TList.Create;
@@ -991,7 +991,7 @@ begin
   begin
     FChannel := TCnDebugChannel(CnDebugChannelClass.NewInstance);
     try
-      FChannel.Create(True); // ´Ë´¦¿ØÖÆÊÇ·ñ×Ô¶¯ Flush
+      FChannel.Create(True); // æ­¤å¤„æ§åˆ¶æ˜¯å¦è‡ªåŠ¨ Flush
     except
       FChannel := nil;
     end;
@@ -1165,7 +1165,7 @@ var
 
   procedure GenerateMsgDesc(MsgBuf: PAnsiChar; MsgSize: Integer);
   begin
-    // ½øĞĞ¾ßÌåµÄ×é×°¹¤×÷
+    // è¿›è¡Œå…·ä½“çš„ç»„è£…å·¥ä½œ
     MsgLen := MsgSize;
     if MsgLen > CnMaxMsgLength then
       MsgLen := CnMaxMsgLength;
@@ -1186,10 +1186,10 @@ var
       ttTickCount: MsgDesc.Annex.MsgTickCount := GetTickCount;
       ttCPUPeriod: MsgDesc.Annex.MsgCPUPeriod := GetCPUPeriod;
     else
-      MsgDesc.Annex.MsgCPUPeriod := 0; // ÉèÎªÈ« 0
+      MsgDesc.Annex.MsgCPUPeriod := 0; // è®¾ä¸ºå…¨ 0
     end;
     
-    // TimeMarkStop Ê±ËùºÄ CPU Ê±ÖÓÖÜÆÚÊı
+    // TimeMarkStop æ—¶æ‰€è€— CPU æ—¶é’Ÿå‘¨æœŸæ•°
     MsgDesc.Annex.MsgCPInterval := CPUPeriod;
     
     CopyMemory(@(MsgDesc.Annex.Tag), Pointer(ATag), TagLen);
@@ -1240,7 +1240,7 @@ begin
     if IsFirst then
       IsFirst := False
     else
-      InterlockedIncrement(FMessageCount); // ²ğ°üÏûÏ¢Ò²Òª¼ÆÊı£¬µ«µÚÒ»ÌõÔÚÉÏÍ·ÒÑ¼ÆÁË
+      InterlockedIncrement(FMessageCount); // æ‹†åŒ…æ¶ˆæ¯ä¹Ÿè¦è®¡æ•°ï¼Œä½†ç¬¬ä¸€æ¡åœ¨ä¸Šå¤´å·²è®¡äº†
 
     if ChkReady then
     begin
@@ -1251,10 +1251,10 @@ begin
         InternalOutput(MsgDesc, MsgLen);
     end;
 
-    // Í¬Ê± DumpToFile
+    // åŒæ—¶ DumpToFile
     if FDumpToFile and not FIgnoreViewer and (FDumpFile <> nil) then
     begin
-      if not FAfterFirstWrite then // µÚÒ»»ØĞ´Ê±ĞèÒªÅĞ¶ÏÊÇ·ñÖØĞ´
+      if not FAfterFirstWrite then // ç¬¬ä¸€å›å†™æ—¶éœ€è¦åˆ¤æ–­æ˜¯å¦é‡å†™
       begin
         if FUseAppend then
           FDumpFile.Seek(0, soFromEnd)
@@ -1263,7 +1263,7 @@ begin
           FDumpFile.Size := 0;
           FDumpFile.Seek(0, soFromBeginning);
         end;
-        FAfterFirstWrite := True; // ºóĞøĞ´¾ÍÎŞĞèÅĞ¶ÏÁË
+        FAfterFirstWrite := True; // åç»­å†™å°±æ— éœ€åˆ¤æ–­äº†
       end;
 
       FDumpFile.Write(MsgDesc, MsgLen);
@@ -1844,7 +1844,7 @@ var
 {$ENDIF}
 begin
 {$IFNDEF NDEBUG}
-  // ¸ù¾İ ATag ÕÒÊÇ·ñ´æÔÚÒÔÇ°µÄ¼ÇÂ¼£¬²»´æÔÚÔòĞÂÔö
+  // æ ¹æ® ATag æ‰¾æ˜¯å¦å­˜åœ¨ä»¥å‰çš„è®°å½•ï¼Œä¸å­˜åœ¨åˆ™æ–°å¢
 //  if ATag = '' then Exit;
   ADesc := IndexOfTime(ATag);
   if ADesc = nil then
@@ -1852,13 +1852,13 @@ begin
 
   if ADesc <> nil then
   begin
-//    ²»·¢¼ÇÂ¼£¬ÒÔ½µµÍÎó²î£¬Ô­Àí²»Ïê£¬²ÑÀ¢
+//    ä¸å‘è®°å½•ï¼Œä»¥é™ä½è¯¯å·®ï¼ŒåŸç†ä¸è¯¦ï¼Œæƒ­æ„§
 //    if AMsg <> '' then
 //      TraceFull(AMsg, ATag, DefLevel, mtTimeMarkStart)
 //    else
 //      TraceFull(SCnTimeMarkStarted, ATag, DefLevel, mtTimeMarkStart);
 
-    // ×îºó¼ÇÂ¼µ±Ê±µÄ CPU ÖÜÆÚ
+    // æœ€åè®°å½•å½“æ—¶çš„ CPU å‘¨æœŸ
     Inc(ADesc^.PassCount);
     ADesc^.StartTime := GetCPUPeriod;
   end;
@@ -1879,13 +1879,13 @@ var
 {$ENDIF}
 begin
 {$IFNDEF NDEBUG}
-  // ÂíÉÏ¼ÇÂ¼µ±Ê±µÄ CPU ÖÜÆÚ
+  // é©¬ä¸Šè®°å½•å½“æ—¶çš„ CPU å‘¨æœŸ
   Period := GetCPUPeriod;
   // if ATag = '' then Exit;
   ADesc := IndexOfTime(ATag);
   if ADesc <> nil then
   begin
-    // µÃµ½ÏàÓ¦µÄ¾É¼ÇÂ¼£¬Ïà¼õ£¬²¢¼õÈ¥Îó²î£¬×÷Îª¼ÇÂ¼·¢³öÈ¥
+    // å¾—åˆ°ç›¸åº”çš„æ—§è®°å½•ï¼Œç›¸å‡ï¼Œå¹¶å‡å»è¯¯å·®ï¼Œä½œä¸ºè®°å½•å‘å‡ºå»
     Inc(ADesc^.AccuTime, Period - ADesc^.StartTime - FFixedCalling);
     if AMsg <> '' then
       TraceFull(AMsg, ATag, CurrentLevel, cmtTimeMarkStop, ADesc^.AccuTime)
@@ -2553,7 +2553,7 @@ begin
   if FDumpFileName <> Value then
   begin
     FDumpFileName := Value;
-    // Dump Ê±¸üĞÂÎÄ¼ş
+    // Dump æ—¶æ›´æ–°æ–‡ä»¶
     if FDumpToFile then
     begin
       if FDumpFile <> nil then
@@ -2568,12 +2568,12 @@ begin
 
       FDumpFile := TFileStream.Create(FDumpFileName,
         Mode or fmShareDenyWrite);
-      FAfterFirstWrite := False; // ÖØĞÂ¿ªÁíÒ»ÎÄ¼ş£¬ĞèÒªÖØĞÂÅĞ¶Ï
+      FAfterFirstWrite := False; // é‡æ–°å¼€å¦ä¸€æ–‡ä»¶ï¼Œéœ€è¦é‡æ–°åˆ¤æ–­
 
-      if FUseAppend then   // ×·¼ÓÔò¶¨Î»µ½½áÎ²
+      if FUseAppend then   // è¿½åŠ åˆ™å®šä½åˆ°ç»“å°¾
         FDumpFile.Seek(0, soFromEnd)
       else
-        FDumpFile.Seek(0, soFromBeginning); // ÒÆ¶¯µ½¿ªÍ·
+        FDumpFile.Seek(0, soFromBeginning); // ç§»åŠ¨åˆ°å¼€å¤´
     end;
   end;
 {$ENDIF}
@@ -2605,12 +2605,12 @@ begin
 
         FDumpFile := TFileStream.Create(FDumpFileName,
           Mode or fmShareDenyWrite);
-        FAfterFirstWrite := False; // ÖØĞÂ¿ªÎÄ¼ş£¬ĞèÒªÖØĞÂÅĞ¶Ï
+        FAfterFirstWrite := False; // é‡æ–°å¼€æ–‡ä»¶ï¼Œéœ€è¦é‡æ–°åˆ¤æ–­
 
-        if FUseAppend then // ×·¼ÓÔò¶¨Î»µ½½áÎ²
+        if FUseAppend then // è¿½åŠ åˆ™å®šä½åˆ°ç»“å°¾
           FDumpFile.Seek(0, soFromEnd)
         else
-          FDumpFile.Seek(0, soFromBeginning); // ÒÆ¶¯µ½¿ªÍ·
+          FDumpFile.Seek(0, soFromBeginning); // ç§»åŠ¨åˆ°å¼€å¤´
       except
         ;
       end;
@@ -3022,7 +3022,7 @@ begin
       end;
     end;
   end
-  else // ÇøÓò¶¼ÓĞĞ§
+  else // åŒºåŸŸéƒ½æœ‰æ•ˆ
     Result := PCnMapHeader(FMapHeader)^.MapEnabled = CnDebugMapEnabled;
 
   if not Result then
@@ -3135,14 +3135,14 @@ var
 
   function BufferFull: Boolean;
   begin
-    if FTail = FFront then      // ¿Õ¶ÓÁĞ
+    if FTail = FFront then      // ç©ºé˜Ÿåˆ—
       Result := False
-    else if FTail < FFront then // Tail ÒÑ¾­ÕÛ·µ£¬Front Ã»ÓĞ
+    else if FTail < FFront then // Tail å·²ç»æŠ˜è¿”ï¼ŒFront æ²¡æœ‰
       Result := FTail + Size < FFront
-    // ¶¼Î´ÕÛ·µ£¬Tail ±È FFront ´ó
-    else if FTail + Size < FQueueSize then // ĞÂÎ»ÖÃÈç²»²úÉúÕÛ·µ£¬ÔòÎ´Âú
+    // éƒ½æœªæŠ˜è¿”ï¼ŒTail æ¯” FFront å¤§
+    else if FTail + Size < FQueueSize then // æ–°ä½ç½®å¦‚ä¸äº§ç”ŸæŠ˜è¿”ï¼Œåˆ™æœªæ»¡
       Result := False
-    else if (FTail + Size) mod FQueueSize < FFront then // ĞÂÎ»ÖÃÕÛ·µµ«²»³¬¹ı Front
+    else if (FTail + Size) mod FQueueSize < FFront then // æ–°ä½ç½®æŠ˜è¿”ä½†ä¸è¶…è¿‡ Front
       Result := False
     else
       Result := True;
@@ -3150,14 +3150,14 @@ var
 
 begin
   if Size > FQueueSize then Exit;
-  // ´ÓÎ²½ø£¬Í·ÓÉ Viewer ¶Á³ö. Tail Ò»Ö±Ç°½ø£¬µ½Î²ÕÛ·µ
-  // Ğ´ÍêÊı¾İºó£¬²ÅÖÃÔö¼ÓµÄ Tail£¬Tail Ö¸ÏòÏÂÒ»¸ö¿ÕÎ»ÖÃ
+  // ä»å°¾è¿›ï¼Œå¤´ç”± Viewer è¯»å‡º. Tail ä¸€ç›´å‰è¿›ï¼Œåˆ°å°¾æŠ˜è¿”
+  // å†™å®Œæ•°æ®åï¼Œæ‰ç½®å¢åŠ çš„ Tailï¼ŒTail æŒ‡å‘ä¸‹ä¸€ä¸ªç©ºä½ç½®
   IsFull := False;
   Mutex := OpenMutex(MUTEX_ALL_ACCESS, False, PChar(SCnDebugQueueMutexName));
   if Mutex <> 0 then
   begin
     Res := WaitForSingleObject(Mutex, CnDebugWaitingMutexTime);
-    if (Res = WAIT_TIMEOUT) or (Res = WAIT_FAILED) then // ³ö´í»ò¶Ô·½²»ÊÍ·Å£¬Ã»·¨×Ó£¬³·
+    if (Res = WAIT_TIMEOUT) or (Res = WAIT_FAILED) then // å‡ºé”™æˆ–å¯¹æ–¹ä¸é‡Šæ”¾ï¼Œæ²¡æ³•å­ï¼Œæ’¤
     begin
       ShowError('Mutex Obtained Error.');
       CloseHandle(Mutex);
@@ -3168,32 +3168,32 @@ begin
   begin
     ShowError('Mutex Opened Error.');
     DestroyHandles;
-    Exit;  // ÎŞ Mutex ±ã²»Ğ´
+    Exit;  // æ—  Mutex ä¾¿ä¸å†™
   end;
 
   try
     LoadQueuePtr;
     if BufferFull then
     begin
-      // Ëø¶¨²¢É¾¶ÓÁĞÍ·ÔªËØ£¬Ö±µ½ÓĞ×ã¹»µÄ¿Õ¼äÀ´ÈİÄÉ±¾ Size ÎªÖ¹
+      // é”å®šå¹¶åˆ é˜Ÿåˆ—å¤´å…ƒç´ ï¼Œç›´åˆ°æœ‰è¶³å¤Ÿçš„ç©ºé—´æ¥å®¹çº³æœ¬ Size ä¸ºæ­¢
       IsFull := True;
       repeat
         MsgLen := PInteger(Integer(FMsgBase) + FFront)^;
         FFront := (FFront + MsgLen) mod FQueueSize;
       until not BufferFull;
-      // É¾Íê±Ï£¬½øÈëĞ´²½Öè -- ÒÔÉÏ¿ÉÒÔ¿¼ÂÇ¸Ä³ÉÖ±½ÓÇå¿Õ¶ÓÁĞ
+      // åˆ å®Œæ¯•ï¼Œè¿›å…¥å†™æ­¥éª¤ -- ä»¥ä¸Šå¯ä»¥è€ƒè™‘æ”¹æˆç›´æ¥æ¸…ç©ºé˜Ÿåˆ—
     end;
 
-    // ÏÈĞ´Êı¾İÔÙ¸ÄÖ¸Õë
+    // å…ˆå†™æ•°æ®å†æ”¹æŒ‡é’ˆ
     if FTail + Size < FQueueSize then
       CopyMemory(Pointer(Integer(FMsgBase) + FTail), @MsgDesc, Size)
     else
     begin
       RestLen := FQueueSize - FTail;
-      if RestLen < SizeOf(Integer) then // Ê£Óà¿Õ¼ä²»×ãÒÔÈİÄÉĞÅÏ¢Í·µÄ Length ×Ö¶Î
+      if RestLen < SizeOf(Integer) then // å‰©ä½™ç©ºé—´ä¸è¶³ä»¥å®¹çº³ä¿¡æ¯å¤´çš„ Length å­—æ®µ
         CopyMemory(Pointer(Integer(FMsgBase) + FTail), @MsgDesc, SizeOf(Integer))
-        // Ç¿ĞĞ¸´ÖÆ£¬ÒªÇó¶ÓÁĞ³¬³öQueueSizeÍâµÄÎ²²¿ÖÁÉÙÓĞ SizeOf(Integer)µÄ¿ÕÓà»º³å
-        // ¿É²»Èç´Ë×ö£¬µ«»áÔö¼Ó Viewer ¶ÁÈ¡³¤¶ÈÊ±µÄ»ØËİÀ§ÄÑ
+        // å¼ºè¡Œå¤åˆ¶ï¼Œè¦æ±‚é˜Ÿåˆ—è¶…å‡ºQueueSizeå¤–çš„å°¾éƒ¨è‡³å°‘æœ‰ SizeOf(Integer)çš„ç©ºä½™ç¼“å†²
+        // å¯ä¸å¦‚æ­¤åšï¼Œä½†ä¼šå¢åŠ  Viewer è¯»å–é•¿åº¦æ—¶çš„å›æº¯å›°éš¾
       else
         CopyMemory(Pointer(Integer(FMsgBase) + FTail), @MsgDesc, RestLen);
 
@@ -3217,7 +3217,7 @@ begin
       if Res = WAIT_FAILED then
       begin
         Res := GetLastError;
-        // ´¦Àí³ö´íÇé¿ö, 5 ÊÇ¾Ü¾ø·ÃÎÊ¡£
+        // å¤„ç†å‡ºé”™æƒ…å†µ, 5 æ˜¯æ‹’ç»è®¿é—®ã€‚
         FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, nil, Res,
           LANG_NEUTRAL or (SUBLANG_DEFAULT shl 10), // Default language
           PChar(@MsgBuf),
@@ -3252,7 +3252,7 @@ begin
     Reg.Free;
   end;
   
-  // ¼ÓÉÏµ÷ÓÃ²ÎÊı
+  // åŠ ä¸Šè°ƒç”¨å‚æ•°
   if S <> '' then
     ViewerExe := AnsiString(S + ' -a ')
   else
@@ -3260,7 +3260,7 @@ begin
   
   hStarting := CreateEvent(nil, False, False, PChar(SCnDebugStartEventName));
   if 31 < WinExec(PAnsiChar(ViewerExe + AnsiString(IntToStr(GetCurrentProcessId))),
-    SW_SHOW) then // ³É¹¦´´½¨£¬µÈ´ı
+    SW_SHOW) then // æˆåŠŸåˆ›å»ºï¼Œç­‰å¾…
   begin
     if hStarting <> 0 then
     begin
@@ -3328,7 +3328,7 @@ initialization
   JclStartExceptionTracking;
   {$ENDIF}
 {$ELSE}
-  CnDebugChannelClass := nil; // NDEBUG »·¾³ÏÂ²»´´½¨ Channel
+  CnDebugChannelClass := nil; // NDEBUG ç¯å¢ƒä¸‹ä¸åˆ›å»º Channel
 {$ENDIF}
 
 finalization

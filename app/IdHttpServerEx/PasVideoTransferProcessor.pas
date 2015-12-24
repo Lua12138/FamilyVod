@@ -1,4 +1,4 @@
-unit PasVideoTransferProcessor;
+ï»¿unit PasVideoTransferProcessor;
 
 interface
 
@@ -8,8 +8,10 @@ uses
 type
   TVideoTransferProcessor = class(TRequestProcessor)
   protected
-    function innerRequested(requestUri: string; requestAction: string): Boolean; override;
-    function onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean; override;
+    function innerRequested(requestUri: string; requestAction: string)
+      : Boolean; override;
+    function onGet(requestInfo: TIdHTTPRequestInfo;
+      responseInfo: TIdHTTPResponseInfo): Boolean; override;
   end;
 
 implementation
@@ -17,12 +19,14 @@ implementation
 uses
   encddecd, System.JSON, IdHTTP, CnDebug, PasMessagerHelper;
 
-function TVideoTransferProcessor.innerRequested(requestUri: string; requestAction: string): Boolean;
+function TVideoTransferProcessor.innerRequested(requestUri: string;
+  requestAction: string): Boolean;
 begin
   Result := 'vlc'.Equals(requestAction);
 end;
 
-function TVideoTransferProcessor.onGet(requestInfo: TIdHTTPRequestInfo; responseInfo: TIdHTTPResponseInfo): Boolean;
+function TVideoTransferProcessor.onGet(requestInfo: TIdHTTPRequestInfo;
+  responseInfo: TIdHTTPResponseInfo): Boolean;
 var
   base64: string;
   objJson: TJSONObject;
@@ -32,12 +36,12 @@ var
   httpResponse: TStream;
   fileSize, filePos: Int64;
 const
-  Block_Size = 1024{Byte/K}   * 1024{K/M}   * 2; // 2MB
+  Block_Size = 1024 { Byte/K } * 1024 { K/M } * 2; // 2MB
 begin
   base64 := requestInfo.Params.Values['base64'];
   base64 := encddecd.DecodeString(base64);
   objJson := TJSONObject.ParseJSONValue(base64) as TJSONObject;
-  url := objJson.Values['url'].Value; // ²¥·ÅµØÖ·
+  url := objJson.Values['url'].Value; // æ’­æ”¾åœ°å€
   objJson := objJson.Values['http_headers'] as TJSONObject; // http headers
 
   http := TIdHTTP.Create();
@@ -45,52 +49,53 @@ begin
     try
       http.HandleRedirects := True;
 
-      TMessagerHelper.sendMessage(FM_SPEAK, 'ÕıÔÚ»º³åÊÓÆµ£¬ÇëÉÔºó');
-      // »ñµÃÎÄ¼şÌå»ı
+        TMessagerHelper.sendMessage(FM_SPEAK, 'æ­£åœ¨ç¼“å†²è§†é¢‘ï¼Œè¯·ç¨å');
+      // è·å¾—æ–‡ä»¶ä½“ç§¯
       http.Head(url);
       fileSize := http.Response.ContentLength;
       responseInfo.ContentLength := fileSize;
-      responseInfo.WriteHeader; // ±ÜÃâ¿Í»§¶Ë¹Ø±ÕÁ¬½Ó
+      responseInfo.WriteHeader; // é¿å…å®¢æˆ·ç«¯å…³é—­è¿æ¥
 
       CnDebugger.TraceMsg('File Size:' + IntToStr(fileSize));
 
-      // Ìí¼ÓHTTPÍ·
+      // æ·»åŠ HTTPå¤´
       for mapJson in objJson do
       begin
-        http.Request.CustomHeaders.AddValue(mapJson.JsonString.Value, mapJson.JsonValue.Value);
+        http.Request.CustomHeaders.AddValue(mapJson.JsonString.Value,
+          mapJson.JsonValue.Value);
       end;
-      // ·Ö¿éÇëÇóÄÚÈİ
-      filePos := 0; // ÎÄ¼şµ±Ç°Î»ÖÃ
+      // åˆ†å—è¯·æ±‚å†…å®¹
+      filePos := 0; // æ–‡ä»¶å½“å‰ä½ç½®
       while filePos < fileSize do
       begin
         http.Request.Range := IntToStr(filePos) + '-';
         if filePos + Block_Size < fileSize then
-          http.Request.Range := http.Request.Range + IntToStr(filePos + Block_Size);
+          http.Request.Range := http.Request.Range +
+            IntToStr(filePos + Block_Size);
 
         CnDebugger.TraceMsg('Request Range:' + http.Request.Range);
 
         httpResponse := TMemoryStream.Create;
-        http.Get(url, httpResponse); // ÇëÇó×ÊÔ´
+        http.Get(url, httpResponse); // è¯·æ±‚èµ„æº
         filePos := filePos + httpResponse.Size;
         responseInfo.ContentType := http.Response.ContentType;
         responseInfo.ContentStream := httpResponse;
-        responseInfo.WriteContent; // Response»á×Ô¶¯ÊÍ·ÅresponseStream¶ÔÏó
+        responseInfo.WriteContent; // Responseä¼šè‡ªåŠ¨é‡Šæ”¾responseStreamå¯¹è±¡
       end;
 
     except
       on E: Exception do
       begin
-        TMessagerHelper.sendMessage(FM_SPEAK, '»º³åÒâÍâÖÕÖ¹');
+        TMessagerHelper.sendMessage(FM_SPEAK, 'ç¼“å†²æ„å¤–ç»ˆæ­¢');
         CnDebugger.TraceMsgError(E.ClassName + ':' + E.Message);
         CnDebugger.TraceMsgError(E.StackTrace);
       end;
     end;
   finally
     objJson.free;
-    http.Free;
+    http.free;
   end;
   Result := True;
 end;
 
 end.
-

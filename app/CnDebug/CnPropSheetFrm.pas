@@ -1,40 +1,40 @@
 {******************************************************************************}
 {                       CnPack For Delphi/C++Builder                           }
-{                     ÖÐ¹úÈË×Ô¼ºµÄ¿ª·ÅÔ´ÂëµÚÈý·½¿ª·¢°ü                         }
-{                   (C)Copyright 2001-2015 CnPack ¿ª·¢×é                       }
+{                     ä¸­å›½äººè‡ªå·±çš„å¼€æ”¾æºç ç¬¬ä¸‰æ–¹å¼€å‘åŒ…                         }
+{                   (C)Copyright 2001-2015 CnPack å¼€å‘ç»„                       }
 {                   ------------------------------------                       }
 {                                                                              }
-{            ±¾¿ª·¢°üÊÇ¿ªÔ´µÄ×ÔÓÉÈí¼þ£¬Äú¿ÉÒÔ×ñÕÕ CnPack µÄ·¢²¼Ð­ÒéÀ´ÐÞ        }
-{        ¸ÄºÍÖØÐÂ·¢²¼ÕâÒ»³ÌÐò¡£                                                }
+{            æœ¬å¼€å‘åŒ…æ˜¯å¼€æºçš„è‡ªç”±è½¯ä»¶ï¼Œæ‚¨å¯ä»¥éµç…§ CnPack çš„å‘å¸ƒåè®®æ¥ä¿®        }
+{        æ”¹å’Œé‡æ–°å‘å¸ƒè¿™ä¸€ç¨‹åºã€‚                                                }
 {                                                                              }
-{            ·¢²¼ÕâÒ»¿ª·¢°üµÄÄ¿µÄÊÇÏ£ÍûËüÓÐÓÃ£¬µ«Ã»ÓÐÈÎºÎµ£±£¡£ÉõÖÁÃ»ÓÐ        }
-{        ÊÊºÏÌØ¶¨Ä¿µÄ¶øÒþº¬µÄµ£±£¡£¸üÏêÏ¸µÄÇé¿öÇë²ÎÔÄ CnPack ·¢²¼Ð­Òé¡£        }
+{            å‘å¸ƒè¿™ä¸€å¼€å‘åŒ…çš„ç›®çš„æ˜¯å¸Œæœ›å®ƒæœ‰ç”¨ï¼Œä½†æ²¡æœ‰ä»»ä½•æ‹…ä¿ã€‚ç”šè‡³æ²¡æœ‰        }
+{        é€‚åˆç‰¹å®šç›®çš„è€Œéšå«çš„æ‹…ä¿ã€‚æ›´è¯¦ç»†çš„æƒ…å†µè¯·å‚é˜… CnPack å‘å¸ƒåè®®ã€‚        }
 {                                                                              }
-{            ÄúÓ¦¸ÃÒÑ¾­ºÍ¿ª·¢°üÒ»ÆðÊÕµ½Ò»·Ý CnPack ·¢²¼Ð­ÒéµÄ¸±±¾¡£Èç¹û        }
-{        »¹Ã»ÓÐ£¬¿É·ÃÎÊÎÒÃÇµÄÍøÕ¾£º                                            }
+{            æ‚¨åº”è¯¥å·²ç»å’Œå¼€å‘åŒ…ä¸€èµ·æ”¶åˆ°ä¸€ä»½ CnPack å‘å¸ƒåè®®çš„å‰¯æœ¬ã€‚å¦‚æžœ        }
+{        è¿˜æ²¡æœ‰ï¼Œå¯è®¿é—®æˆ‘ä»¬çš„ç½‘ç«™ï¼š                                            }
 {                                                                              }
-{            ÍøÕ¾µØÖ·£ºhttp://www.cnpack.org                                   }
-{            µç×ÓÓÊ¼þ£ºmaster@cnpack.org                                       }
+{            ç½‘ç«™åœ°å€ï¼šhttp://www.cnpack.org                                   }
+{            ç”µå­é‚®ä»¶ï¼šmaster@cnpack.org                                       }
 {                                                                              }
 {******************************************************************************}
 
 unit CnPropSheetFrm;
 { |<PRE>
 ================================================================================
-* Èí¼þÃû³Æ£ºCnPack ¹«ÓÃµ¥Ôª
-* µ¥ÔªÃû³Æ£º¶ÔÏó RTTI ÐÅÏ¢ÏÔÊ¾´°Ìåµ¥Ôª
-* µ¥Ôª×÷Õß£ºÁõÐ¥£¨LiuXiao£© liuxiao@cnpack.org
-* ±¸    ×¢£º
-* ¿ª·¢Æ½Ì¨£ºPWinXP + Delphi 5
-* ¼æÈÝ²âÊÔ£ºÎ´²âÊÔ
-* ±¾ µØ »¯£º¸Ã´°ÌåÖÐµÄ×Ö·û´®ÔÝ²»·ûºÏ±¾µØ»¯´¦Àí·½Ê½
-* µ¥Ôª±êÊ¶£º$Id$
-* ÐÞ¸Ä¼ÇÂ¼£º2012.03.10
-*               ¼ÓÈëÍ¼Æ¬¶ÔÏóµÄ¿ÉÊÓ»¯ÏÔÊ¾
+* è½¯ä»¶åç§°ï¼šCnPack å…¬ç”¨å•å…ƒ
+* å•å…ƒåç§°ï¼šå¯¹è±¡ RTTI ä¿¡æ¯æ˜¾ç¤ºçª—ä½“å•å…ƒ
+* å•å…ƒä½œè€…ï¼šåˆ˜å•¸ï¼ˆLiuXiaoï¼‰ liuxiao@cnpack.org
+* å¤‡    æ³¨ï¼š
+* å¼€å‘å¹³å°ï¼šPWinXP + Delphi 5
+* å…¼å®¹æµ‹è¯•ï¼šæœªæµ‹è¯•
+* æœ¬ åœ° åŒ–ï¼šè¯¥çª—ä½“ä¸­çš„å­—ç¬¦ä¸²æš‚ä¸ç¬¦åˆæœ¬åœ°åŒ–å¤„ç†æ–¹å¼
+* å•å…ƒæ ‡è¯†ï¼š$Id$
+* ä¿®æ”¹è®°å½•ï¼š2012.03.10
+*               åŠ å…¥å›¾ç‰‡å¯¹è±¡çš„å¯è§†åŒ–æ˜¾ç¤º
 *           2006.11.23
-*               ¼ÓÈë¶ÔÏóÀà¼Ì³Ð¹ØÏµµÄÏÔÊ¾
+*               åŠ å…¥å¯¹è±¡ç±»ç»§æ‰¿å…³ç³»çš„æ˜¾ç¤º
 *           2006.11.07
-*               ´´½¨µ¥Ôª£¬ÊµÏÖ¹¦ÄÜ
+*               åˆ›å»ºå•å…ƒï¼Œå®žçŽ°åŠŸèƒ½
 ================================================================================
 |</PRE>}
 
@@ -56,7 +56,7 @@ type
   TCnPropContentTypes = set of TCnPropContentType;
 
   TCnDisplayObject = class(TObject)
-  {* ÃèÊöÒ»¹©ÏÔÊ¾ÄÚÈÝµÄ»ùÀà }
+  {* æè¿°ä¸€ä¾›æ˜¾ç¤ºå†…å®¹çš„åŸºç±» }
   private
     FChanged: Boolean;
     FDisplayValue: string;
@@ -72,7 +72,7 @@ type
   end;
 
   TCnPropertyObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ»ÊôÐÔ }
+  {* æè¿°ä¸€å±žæ€§ }
   private
     FIsObject: Boolean;
     FPropName: string;
@@ -86,7 +86,7 @@ type
   end;
 
   TCnEventObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ»ÊÂ¼þ¼°Æä´¦Àíº¯Êý }
+  {* æè¿°ä¸€äº‹ä»¶åŠå…¶å¤„ç†å‡½æ•° }
   private
     FHandlerName: string;
     FEventType: string;
@@ -98,7 +98,7 @@ type
   end;
 
   TCnStringsObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ» TStrings}
+  {* æè¿°ä¸€ TStrings}
   private
 
   public
@@ -106,7 +106,7 @@ type
   end;
 
   TCnGraphicsObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ»Í¼Æ¬}
+  {* æè¿°ä¸€å›¾ç‰‡}
   private
     FGraphic: TObject;
   public
@@ -114,7 +114,7 @@ type
   end;
 
   TCnCollectionItemObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ» Collection Item }
+  {* æè¿°ä¸€ Collection Item }
   private
     FIndex: Integer;
     FItemName: string;
@@ -124,7 +124,7 @@ type
   end;
 
   TCnComponentObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ» Component }
+  {* æè¿°ä¸€ Component }
   private
     FIndex: Integer;
     FCompName: string;
@@ -136,7 +136,7 @@ type
   end;
 
   TCnControlObject = class(TCnDisplayObject)
-  {* ÃèÊöÒ» Component }
+  {* æè¿°ä¸€ Component }
   private
     FIndex: Integer;
     FCtrlName: string;
@@ -148,7 +148,7 @@ type
   end;
 
   TCnObjectInspector = class(TObject)
-  {* ¶ÔÏóÊôÐÔ·½·¨µÄ¹ÜÀí»ù´¡Àà }
+  {* å¯¹è±¡å±žæ€§æ–¹æ³•çš„ç®¡ç†åŸºç¡€ç±» }
   private
     FObjectAddr: Pointer;
     FProperties: TObjectList;
@@ -195,7 +195,7 @@ type
     procedure InspectObject;
     procedure Clear;
     property ObjectAddr: Pointer read FObjectAddr write SetObjectAddr;
-    {* Ö÷Òª¹©Íâ²¿Ð´£¬Ð´Èë Object£¬»ò String }
+    {* ä¸»è¦ä¾›å¤–éƒ¨å†™ï¼Œå†™å…¥ Objectï¼Œæˆ– String }
 
     property Properties: TObjectList read FProperties;
     property Events: TObjectList read FEvents;
@@ -235,7 +235,7 @@ type
   TCnObjectInspectorClass = class of TCnObjectInspector;
 
   TCnLocalObjectInspector = class(TCnObjectInspector)
-  {* Í¬Ò»½ø³ÌÄÚµÄ¶ÔÏóÊôÐÔ·½·¨µÄ¹ÜÀíÀà }
+  {* åŒä¸€è¿›ç¨‹å†…çš„å¯¹è±¡å±žæ€§æ–¹æ³•çš„ç®¡ç†ç±» }
   private
     FObjectInstance: TObject;
   protected
@@ -293,7 +293,7 @@ type
     FPropListPtr: PPropList;
     FPropCount: Integer;
     FObjectPointer: Pointer;
-    // Ö¸Ïò Object ÊµÀý»ò ±êÊ¶×Ö·û´®
+    // æŒ‡å‘ Object å®žä¾‹æˆ– æ ‡è¯†å­—ç¬¦ä¸²
     FInspector: TCnObjectInspector;
     FInspectParam: Pointer;
     FCurrObj: TObject;
@@ -318,7 +318,7 @@ type
     procedure DoEvaluateBegin; virtual;
     procedure DoEvaluateEnd; virtual;
 
-    // ÊÂ¼þ×ªÒÆµ¼³öµ½ÍâÃæ
+    // äº‹ä»¶è½¬ç§»å¯¼å‡ºåˆ°å¤–é¢
     procedure AfterEvaluateComponents(Sender: TObject);
     procedure AfterEvaluateControls(Sender: TObject);
     procedure AfterEvaluateCollections(Sender: TObject);
@@ -859,10 +859,10 @@ begin
 
     DoAfterEvaluateProperties;
 
-    // ´¦Àí CollectionItem£¬Components ºÍ Controls£¬È¡À´Ö±½Ó±È½ÏÊÇ·ñ Changed ¼´¿É¡£
+    // å¤„ç† CollectionItemï¼ŒComponents å’Œ Controlsï¼Œå–æ¥ç›´æŽ¥æ¯”è¾ƒæ˜¯å¦ Changed å³å¯ã€‚
     if ObjectInstance is TCollection then
     begin
-      // »ñµÃÆä Items
+      // èŽ·å¾—å…¶ Items
       ACollection := (FObjectInstance as TCollection);
       for I := 0 to ACollection.Count - 1 do
       begin
@@ -897,7 +897,7 @@ begin
     end
     else if ObjectInstance is TComponent then
     begin
-      // »ñµÃÆä Componets
+      // èŽ·å¾—å…¶ Componets
       AComp := (FObjectInstance as TComponent);
       for I := 0 to AComp.ComponentCount - 1 do
       begin
@@ -930,7 +930,7 @@ begin
 
       DoAfterEvaluateComponents;
 
-      // »ñµÃÆä Controls
+      // èŽ·å¾—å…¶ Controls
       if ObjectInstance is TWinControl then
       begin
         AControl:= (FObjectInstance as TWinControl);
@@ -966,7 +966,7 @@ begin
         DoAfterEvaluateControls;
       end;
 
-      // Èç¹ûÊÇ ImageList£¬»­Æä×ÓÍ¼Æ¬
+      // å¦‚æžœæ˜¯ ImageListï¼Œç”»å…¶å­å›¾ç‰‡
       if ObjectInstance is TImageList then
       begin
         FGraphics.Graphic := ObjectInstance;
@@ -974,7 +974,7 @@ begin
       end;
     end
     else if (ObjectInstance is TGraphic) or (ObjectInstance is TPicture) then
-    begin // ´¦ÀíÍ¼ÏñÊý¾Ý
+    begin // å¤„ç†å›¾åƒæ•°æ®
       FGraphics.Graphic := ObjectInstance;
       Include(FContentTypes, pctGraphics);
     end;
@@ -999,7 +999,7 @@ begin
   UpdateUIStrings;
 
   // FListViewHeaderHeight := ListView_GetItemSpacing(lvProp.Handle, 1);
-  FListViewHeaderHeight := 8; // ÁÐÍ·¸ß¶È
+  FListViewHeaderHeight := 8; // åˆ—å¤´é«˜åº¦
   
   Left := CnFormLeft;
   Top := CnFormTop;
@@ -1026,7 +1026,7 @@ begin
     FInspector.Create(Data);
   end;
 
-  // ½ÓÊÕÄÚ²¿ÊÂ¼þ
+  // æŽ¥æ”¶å†…éƒ¨äº‹ä»¶
   FInspector.OnAfterEvaluateProperties := AfterEvaluateProperties;
   FInspector.OnAfterEvaluateComponents := AfterEvaluateComponents;
   FInspector.OnAfterEvaluateControls := AfterEvaluateControls;
@@ -1123,7 +1123,7 @@ begin
     begin
       if (FGraphicObject as TImageList).Count > 0 then
       begin
-        // TODO: ¸ù¾Ý ImageList ³ß´çÒÔ¼° Image ³ß´çÀ´ÅÅ°æ»æÖÆ
+        // TODO: æ ¹æ® ImageList å°ºå¯¸ä»¥åŠ Image å°ºå¯¸æ¥æŽ’ç‰ˆç»˜åˆ¶
         ImageList := FGraphicObject as TImageList;
         ImgLeft := IMG_MARGIN;
         ImgTop := IMG_MARGIN;
@@ -1226,7 +1226,7 @@ var
   APanel: TPanel;
   ABevel: TBevel;
 begin
-  // ¸ù¾Ý FHierarchys »æÖÆ Hierarchy Í¼
+  // æ ¹æ® FHierarchys ç»˜åˆ¶ Hierarchy å›¾
   FHierPanels.Clear;
   for I := 0 to FHierarchys.Count - 1 do
   begin
@@ -1370,7 +1370,7 @@ begin
   if Closing then Exit;
   
   GetKeyboardState(KeyState);
-  if (KeyState[VK_SHIFT] and $80) <> 0 then // °´ Shift È«¹Ø
+  if (KeyState[VK_SHIFT] and $80) <> 0 then // æŒ‰ Shift å…¨å…³
   begin
     Closing := True;
     try

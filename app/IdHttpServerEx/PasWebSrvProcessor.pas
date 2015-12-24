@@ -37,14 +37,14 @@ begin
   responseStatus := 200;
   try
     responseStream := TMemoryStream.Create;
-    if requestInfo.URI.Equals('/') then // 点播页面
+    if requestInfo.URI.Equals('/') then // 鐐规挱椤甸潰
     begin
       CnDebugger.TraceMsg('Request HomePage');
       responseContentType := 'text/html';
-      responseCharset := 'gb2312';
+      responseCharset := 'utf-8';
       TMemoryStream(responseStream).LoadFromFile(TGlobalConfiguration.getInstance.webRoot + '/index.html');
     end
-    else if '/services/browser/img'.Equals(requestinfo.URI) then // 图片翻译
+    else if '/services/browser/img'.Equals(requestinfo.URI) then // 鍥剧墖缈昏瘧
     begin
       CnDebugger.TraceMsg('Request Image Transfer');
       http := TIdHTTP.Create();
@@ -56,7 +56,7 @@ begin
         http.Free;
       end;
     end
-    else // 本地资源
+    else // 鏈湴璧勬簮
     begin
       if FileExists(TGlobalConfiguration.getInstance.webRoot + requestInfo.URI) then
       begin

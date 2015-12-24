@@ -15,7 +15,7 @@ type
     ------------------------------------------------------------------------------- }
   TRequestProcessor = class(TObject)
   private
-    alwaysDoOnCommand: Boolean; // 无论如何都调用onCommand方法
+    alwaysDoOnCommand: Boolean; // 鏃犺濡備綍閮借皟鐢╫nCommand鏂规硶
   protected
     function innerRequested(requestUri: string; requestAction: string): Boolean;
       virtual; abstract;
@@ -29,9 +29,9 @@ type
       write alwaysDoOnCommand;
   public
     constructor Create;
-    // 处理器是否处理该请求，处理返回true
+    // 澶勭悊鍣ㄦ槸鍚﹀鐞嗚璇锋眰锛屽鐞嗚繑鍥瀟rue
     function requested(requestUri: string; requestAction: string): Boolean;
-    // 是否传递给下一个处理器，中断处理链返回false
+    // 鏄惁浼犻�掔粰涓嬩竴涓鐞嗗櫒锛屼腑鏂鐞嗛摼杩斿洖false
     function onCommand(context: TIdContext; requestInfo: TIdHTTPRequestInfo;
       responseInfo: TIdHTTPResponseInfo): Boolean; overload;
   end;

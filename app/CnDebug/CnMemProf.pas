@@ -1,66 +1,66 @@
 {******************************************************************************}
 {                       CnPack For Delphi/C++Builder                           }
-{                     �й����Լ��Ŀ���Դ�������������                         }
-{                   (C)Copyright 2001-2015 CnPack ������                       }
+{                     中国人自己的开放源码第三方开发包                         }
+{                   (C)Copyright 2001-2015 CnPack 开发组                       }
 {                   ------------------------------------                       }
 {                                                                              }
-{            ���������ǿ�Դ���������������������� CnPack �ķ���Э������        }
-{        �ĺ����·�����һ����                                                }
+{            本开发包是开源的自由软件，您可以遵照 CnPack 的发布协议来修        }
+{        改和重新发布这一程序。                                                }
 {                                                                              }
-{            ������һ��������Ŀ����ϣ�������ã���û���κε���������û��        }
-{        �ʺ��ض�Ŀ�Ķ������ĵ���������ϸ���������� CnPack ����Э�顣        }
+{            发布这一开发包的目的是希望它有用，但没有任何担保。甚至没有        }
+{        适合特定目的而隐含的担保。更详细的情况请参阅 CnPack 发布协议。        }
 {                                                                              }
-{            ��Ӧ���Ѿ��Ϳ�����һ���յ�һ�� CnPack ����Э��ĸ��������        }
-{        ��û�У��ɷ������ǵ���վ��                                            }
+{            您应该已经和开发包一起收到一份 CnPack 发布协议的副本。如果        }
+{        还没有，可访问我们的网站：                                            }
 {                                                                              }
-{            ��վ��ַ��http://www.cnpack.org                                   }
-{            �����ʼ���master@cnpack.org                                       }
+{            网站地址：http://www.cnpack.org                                   }
+{            电子邮件：master@cnpack.org                                       }
 {                                                                              }
 {******************************************************************************}
 
 unit CnMemProf;
 {* |<PRE>
 ================================================================================
-* �������ƣ�������������
-* ��Ԫ���ƣ��ڴ������Ԫ
-* ��Ԫ���ߣ�Chinbo(Shenloqi@hotmail.com)
-* ��    ע��ʹ������ʱ��Ҫ�����ŵ�Project�ļ���Uses�ĵ�һ������Ȼ������󱨡�
-*           Ȼ���ڹ����м���
+* 软件名称：开发包基础库
+* 单元名称：内存防护单元
+* 单元作者：Chinbo(Shenloqi@hotmail.com)
+* 备    注：使用它的时候要把它放到Project文件的Uses的第一个，不然会出现误报。
+*           然后在工程中加上
 *             - mmPopupMsgDlg := True;
-*               ������ڴ�й©���͵����Ի���
+*               如果有内存泄漏，就弹出对话框
 *             - mmShowObjectInfo := True;
-*               ���ڴ�й©������RTTI���ͻᱨ����������
-*             - ������ó���������ٶ����������趨
+*               有内存泄漏，且有RTTI，就会报告对象的类型
+*             - 如果觉得程序的运行速度慢，可以设定
 *               mmUseObjectList := False;
-*               ���ܹ�������ϸ���ڴ�й©�ĵ�ַ�Լ�������Ϣ����ʹ�趨��
-*               mmShowObjectInfo�������������ٶȸ�Delphi�Դ����ٶ����
-*             - �������Ҫ�ڴ��鱨�棬�����趨
+*               不能够报告详细的内存泄漏的地址以及对象信息，即使设定了
+*               mmShowObjectInfo，这样经测试速度跟Delphi自带的速度相仿
+*             - 如果不需要内存检查报告，可以设定
 *               mmSaveToLogFile := False;
-*             - ���Ҫ�Զ����¼�ļ��������趨
-*               mmErrLogFile := '��ļ�¼�ļ���';
-*               Ĭ���ļ���Ϊexe�ļ���Ŀ¼�µ�memory.log
-*             - ����ʹ��SnapToFile����ץȡ�ڴ�����״̬��ָ���ļ���
-*               �ڳ�����ֹʱ��OutputDebugString���ڴ�ʹ��״����
-* ����ƽ̨��PWin98SE + Delphi 5.0
-* ���ݲ��ԣ�PWin9X/2000/XP + Delphi 5/6
-* �� �� �����õ�Ԫ�е��ַ������ϱ��ػ�������ʽ
-* ��Ԫ��ʶ��$Id$
-* �޸ļ�¼��
+*             - 如果要自定义记录文件，可以设定
+*               mmErrLogFile := '你的记录文件名';
+*               默认文件名为exe文件的目录下的memory.log
+*             - 可以使用SnapToFile过程抓取内存运行状态到指定文件。
+*               在程序终止时会OutputDebugString出内存使用状况。
+* 开发平台：PWin98SE + Delphi 5.0
+* 兼容测试：PWin9X/2000/XP + Delphi 5/6
+* 本 地 化：该单元中的字符串符合本地化处理方式
+* 单元标识：$Id$
+* 修改记录：
 *           2004.09.18 V1.3
-*               ��¼�滻�ڴ������֮ǰ��AllocMemCount
-*               ʵ�ֱ��ػ�
+*               记录替换内存管理器之前的AllocMemCount
+*               实现本地化
 *           2004.03.29 V1.2
-*               Ϊ�ܿ�D6D7��TypInfo���µ��󱨣�ʹ�ñ���ָ����� RTTI ��Ϣ��¼��
-*               �򿪱��뿪�� LOGRTTI ��������󱨣����� uses �� DB ��Ԫ��ʱ��
+*               为避开D6D7下TypInfo导致的误报，使用编译指令控制 RTTI 信息记录，
+*               打开编译开关 LOGRTTI 后可能有误报，比如 uses 了 DB 单元的时候。
 *           2003.09.21 V1.1
-*               ����ʾ������Ϣ�����ڴ�й©ʱ������һ�����з���鿴
-*               �������趨mmErrLogFile����һ���ڴ�й©�ļ���
-*               ԭ�������ڴ��������Ч֮ǰ��mmErrLogFileָ��������ü���Ϊ0��
-*             ���������ڴ��������Ч֮���趨��������������ڴ�����������˿ռ䣬
-*             ����Ϊ��ȫ�ֵ�mmErrLogFile���ø������������ü���ʼ�մ���0���ַ�
-*             �����������ڴ�������ƽ�֮ǰ��ʱ�ͷţ����������ڴ�й©�ļ���
+*               不显示对象信息且有内存泄漏时多添加一个空行方便查看
+*               更正了设定mmErrLogFile导致一个内存泄漏的假象
+*               原因：在新内存管理器生效之前，mmErrLogFile指向的是引用计数为0的
+*             常量，新内存管理器生效之后设定这个变量就向新内存管理器申请了空间，
+*             且因为有全局的mmErrLogFile引用该区域，所以引用计数始终大于0，字符
+*             串不能在新内存管理器移交之前及时释放，因此造成了内存泄漏的假象。
 *           2002.08.06 V1.0
-*               ������Ԫ
+*               创建单元
 ================================================================================
 |</PRE>}
 
@@ -68,7 +68,7 @@ interface
 
 {$I CnPack.inc}
 
-// Ĭ�ϲ���¼ RTTI ��Ϣ������D67�µ� TypInfo ��Ԫ�������
+// 默认不记录 RTTI 信息，避免D67下的 TypInfo 单元引起的误报
 // {$DEFINE LOGRTTI}  
 
 var
@@ -109,10 +109,10 @@ var
 {-----------------------------------------------------------------------------
   Procedure: AddToList
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: P: Pointer
   Result:    None
-  ����ָ��
+  添加指针
 -----------------------------------------------------------------------------}
 
 procedure AddToList(P: Pointer);
@@ -129,10 +129,10 @@ end;
 {-----------------------------------------------------------------------------
   Procedure: RemoveFromList
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: P: Pointer
   Result:    None
-  �Ƴ�ָ��
+  移除指针
 -----------------------------------------------------------------------------}
 
 procedure RemoveFromList(P: Pointer);
@@ -151,13 +151,13 @@ end;
 {-----------------------------------------------------------------------------
   Procedure: SnapToFile
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: Filename: string
   Result:    None
-  Modify:    �ܾ��� (zjy@cnpack.org) 2002.08.06
-             Ϊ���㱾�ػ�������������һЩ����
-             ����ɶ��Ա�ԭ���½� :-(
-  ץȡ����
+  Modify:    周劲羽 (zjy@cnpack.org) 2002.08.06
+             为方便本地化处理，进行了一些调整
+             代码可读性比原来下降 :-(
+  抓取快照
 -----------------------------------------------------------------------------}
 
 procedure SnapToFile(Filename: string);
@@ -176,10 +176,10 @@ var
 {-----------------------------------------------------------------------------
   Procedure: MSELToTime
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: const MSEL: DWORD
   Result:    string
-  ת��ʱ��
+  转换时间
 -----------------------------------------------------------------------------}
 
   function MSELToTime(const MSEL: DWORD): string;
@@ -262,7 +262,7 @@ begin
             else
             begin
               ptd := GetTypeData(PTypeInfo(Item.ClassInfo));
-              //�Ƿ��������
+              //是否具有名称
               ppi := GetPropInfo(PTypeInfo(Item.ClassInfo), 'Name');
               if ppi <> nil then
               begin
@@ -293,10 +293,10 @@ end;
 {-----------------------------------------------------------------------------
   Procedure: NewGetMem
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: Size: Integer
   Result:    Pointer
-  �����ڴ�
+  分配内存
 -----------------------------------------------------------------------------}
 
 function NewGetMem(Size: TCnMemProofInteger): Pointer;
@@ -310,10 +310,10 @@ end;
 {-----------------------------------------------------------------------------
   Procedure: NewFreeMem
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: P: Pointer
   Result:    Integer
-  �ͷ��ڴ�
+  释放内存
 -----------------------------------------------------------------------------}
 
 function NewFreeMem(P: Pointer): Integer;
@@ -327,10 +327,10 @@ end;
 {-----------------------------------------------------------------------------
   Procedure: NewReallocMem
   Author:    Chinbo(Chinbo)
-  Date:      06-����-2002
+  Date:      06-八月-2002
   Arguments: P: Pointer; Size: Integer
   Result:    Pointer
-  ���·���
+  重新分配
 -----------------------------------------------------------------------------}
 
 function NewReallocMem(P: Pointer; Size: TCnMemProofInteger): Pointer;

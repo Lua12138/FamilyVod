@@ -22,9 +22,9 @@ type
     class var instance: TGlobalConfiguration;
   protected
   public
-    // »ñµÃÏà¶ÔÓÚ³ÌĞòÂ·¾¶µÄurl
+    // è·å¾—ç›¸å¯¹äºç¨‹åºè·¯å¾„çš„url
     function relativePath(path: string): string;
-    // ±£´æÅäÖÃµ½Ó²ÅÌ
+    // ä¿å­˜é…ç½®åˆ°ç¡¬ç›˜
     procedure save;
     class function getInstance: TGlobalConfiguration; static;
     constructor Create(NoUse: Byte);
@@ -55,7 +55,7 @@ end;
 
 constructor TGlobalConfiguration.Create(NoUse: Byte);
 begin
-  // ¹«¹²¹¹Ôì·½·¨Å×Òì³££¬·ÀÖ¹µ÷ÓÃTobject.create
+  // å…¬å…±æ„é€ æ–¹æ³•æŠ›å¼‚å¸¸ï¼Œé˜²æ­¢è°ƒç”¨Tobject.create
   raise Exception.Create('Can not support this operation!');
 end;
 
@@ -95,8 +95,8 @@ begin
 end;
 { *------------------------------------------------------------------------------
   .
-  @param path Ïà¶ÔÂ·¾¶
-  @return Ïà¶ÔÓÚ³ÌĞòÄ¿Â¼µÄ¾ø¶ÔÂ·¾¶
+  @param path ç›¸å¯¹è·¯å¾„
+  @return ç›¸å¯¹äºç¨‹åºç›®å½•çš„ç»å¯¹è·¯å¾„
   ------------------------------------------------------------------------------- }
 
 function TGlobalConfiguration.relativePath(path: string): string;

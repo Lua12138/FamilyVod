@@ -6,7 +6,7 @@
  *
  * Last modified: 2015.03.08
  *
- * author: Robert Jêdrzejczyk
+ * author: Robert Jé˜£rzejczyk
  * e-mail: robert@prog.olsztyn.pl
  *    www: http://prog.olsztyn.pl/paslibvlc
  *

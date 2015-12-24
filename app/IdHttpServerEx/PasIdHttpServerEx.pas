@@ -16,9 +16,9 @@ type
   public
     constructor Create;
     destructor Destroy;
-    // ×¢²áĞÂ´¦ÀíÆ÷£¬²¢·µ»Ø¸Ã´¦ÀíÆ÷µÄÒıÓÃ¼ÆÊı
+    // æ³¨å†Œæ–°å¤„ç†å™¨ï¼Œå¹¶è¿”å›è¯¥å¤„ç†å™¨çš„å¼•ç”¨è®¡æ•°
     function registerProcessor(processor: TRequestProcessor): Boolean;
-    // ÒÆ³ıÖ¸¶¨´¦ÀíÆ÷£¬²¢·µ»Ø¸Ã´¦ÀíÆ÷µÄÒıÓÃ¼ÆÊı
+    // ç§»é™¤æŒ‡å®šå¤„ç†å™¨ï¼Œå¹¶è¿”å›è¯¥å¤„ç†å™¨çš„å¼•ç”¨è®¡æ•°
     function removeProcessor(processor: TRequestProcessor): Boolean; overload;
     function removeProcessor(processorClassName: string): Boolean; overload;
     procedure Free;
@@ -42,10 +42,10 @@ begin
   inherited;
 end;
 {*------------------------------------------------------------------------------
-  ×¢²áÒ»¸ö´¦ÀíÆ÷
+  æ³¨å†Œä¸€ä¸ªå¤„ç†å™¨
 
-  @param processor ´¦ÀíÆ÷
-  @return ×¢²á½á¹û
+  @param processor å¤„ç†å™¨
+  @return æ³¨å†Œç»“æœ
 -------------------------------------------------------------------------------}
 function TIdHttpServerEx.registerProcessor(processor: TRequestProcessor): Boolean;
 var
@@ -72,7 +72,7 @@ begin
         CnDebugger.TraceMsg('Free Input Processor');
         processor.Free;
       end;
-      //processor := pro; // ´«Èë¶ÔÏóÒÑ´æÔÚ£¬ÇÒ²»ÎªÖ®Ç°µÄ¶ÔÏó£¬ÔòÊÍ·ÅĞÂ¶ÔÏó£¬ÑØÓÃ¾ÉµÄ¶ÔÏó
+      //processor := pro; // ä¼ å…¥å¯¹è±¡å·²å­˜åœ¨ï¼Œä¸”ä¸ä¸ºä¹‹å‰çš„å¯¹è±¡ï¼Œåˆ™é‡Šæ”¾æ–°å¯¹è±¡ï¼Œæ²¿ç”¨æ—§çš„å¯¹è±¡
       processor := nil;
       Break;
     end;
@@ -145,7 +145,7 @@ begin
   CnDebugger.TraceMsgWithTag('Enter:CommandDispatcher', Self.ClassName);
   uri := ARequestInfo.uri;
   action := ARequestInfo.Params.Values['action'];
-  // ±éÀú
+  // éå†
   for eachProcessor in Self.FChainList do
   begin
     if eachProcessor.requested(uri, action) then

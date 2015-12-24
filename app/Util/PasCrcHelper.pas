@@ -1,4 +1,4 @@
-﻿unit PasCrcHelper;
+unit PasCrcHelper;
 
 interface
 
