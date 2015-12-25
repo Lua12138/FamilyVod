@@ -1,7 +1,3 @@
-<!--
-凤凰中文台 http://zv.3gv.ifeng.com/zhongwen.m3u8 http://zv.3gv.ifeng.com/zhongwen800k.m3u8
-凤凰香港台 http://zv.3gv.ifeng.com/hongkong.m3u8 http://zv.3gv.ifeng.com/hongkong800k.m3u8
--->
 <html>
 <head>
     <meta charset="utf-8">
@@ -353,7 +349,8 @@
             var li = $("<li>");
             var a = $("<a>", {class: "item-link item-content", href: "#albumDetail"});
             var divImage = $("<div>", {class: "item-media"});
-            var img = $("<img>", {style: "width: 4rem;", src: imageUrl, error: Events.imageLoadError});
+            var img = $("<img>", {style: "width: 4rem;", src: imageUrl});
+			img.bind("error", Events.imageLoadError);
             var divItem = $("<div>", {class: "item-inner"});
             var divItemTitle = $("<div>", {class: "item-title-row"});
             var divItemMainTitle = $("<div>", {class: "item-title", text: title});
