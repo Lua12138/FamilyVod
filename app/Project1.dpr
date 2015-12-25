@@ -20,7 +20,6 @@ uses
   PasWebSrvProcessor in 'IdHttpServerEx\PasWebSrvProcessor.pas',
   PasUpdateProcessor in 'IdHttpServerEx\PasUpdateProcessor.pas',
   PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas',
-  PasLibVlcMediaMeta in 'LibVlcEx\PasLibVlcMediaMeta.pas',
   PasPlayerListProcessor in 'IdHttpServerEx\PasPlayerListProcessor.pas',
   PasLibVlcUserData in 'LibVlcEx\PasLibVlcUserData.pas',
   PasYoutubedlHelper in 'Util\PasYoutubedlHelper.pas';

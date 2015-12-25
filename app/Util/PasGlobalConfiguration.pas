@@ -1,4 +1,4 @@
-unit PasGlobalConfiguration;
+﻿unit PasGlobalConfiguration;
 
 interface
 
@@ -108,6 +108,7 @@ procedure TGlobalConfiguration.Free;
 begin
   if TGlobalConfiguration.instance <> nil then
   begin
+    TGlobalConfiguration.instance.save;
     TGlobalConfiguration.instance.FIni.Free;
     FreeAndNil(TGlobalConfiguration.instance);
   end;
