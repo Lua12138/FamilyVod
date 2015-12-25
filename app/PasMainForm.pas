@@ -324,6 +324,7 @@ end;
 procedure TfrmMain.playerMediaPlayerEncounteredError(Sender: TObject);
 begin
   CnDebugger.TraceMsg('EncounteredError');
+  Self.speak('网络异常，播放失败，请重试');
 end;
 
 procedure TfrmMain.playerMediaPlayerEndReached(Sender: TObject);
