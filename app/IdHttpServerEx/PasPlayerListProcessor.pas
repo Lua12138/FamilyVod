@@ -42,11 +42,11 @@ begin
   begin
     playerList := Pointer(returnValue);
     jsonResult := TJSONArray.Create;
+    jsonElement := TJSONObject.Create;
     for step := 0 to playerList.Count - 1 do
     begin
       media := playerList.GetMedia(step);
       userData := media.GetUserData;
-      jsonElement := TJSONObject.Create;
       jsonElement.AddPair('id', TJSONNumber.Create(step));
       jsonElement.AddPair('title', userData.Title);
       jsonElement.AddPair('playstatus',
@@ -55,6 +55,7 @@ begin
       media.Free;
     end;
     responseInfo.ContentText := jsonResult.ToJSON;
+    jsonElement.Free;
     jsonResult.Free;
   end;
 

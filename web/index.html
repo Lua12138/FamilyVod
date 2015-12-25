@@ -26,7 +26,7 @@
     <!-- 标题栏 -->
     <header class="bar bar-nav">
         <a class="icon icon-me pull-left open-panel"></a>
-
+		<a href="#iptv"><button class="button pull-right" onclick="Events.iptvClick();">IPTV</button></a>
         <h1 class="title">视频检索页面</h1>
         <!-- 搜索条 -->
         <div class="bar bar-header-secondary">
@@ -77,7 +77,7 @@
 <!-- 专辑详细页 -->
 <div id="albumDetail" class="page">
     <header class="bar bar-nav">
-        <a class="button button-link button-nav pull-left back" href="index.jsp">
+        <a class="button button-link button-nav pull-left back" href="index.html">
             <span class="icon icon-left"></span>
             返回
         </a>
@@ -104,6 +104,24 @@
                     </a>
                 </li>
                 -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- iptv点播 -->
+<div id="iptv" class="page">
+    <header class="bar bar-nav">
+        <a class="button button-link button-nav pull-left back" href="index.html">
+            <span class="icon icon-left"></span>
+            返回
+        </a>
+
+        <h1 class='title'>IPTV</h1>
+    </header>
+    <div class="content">
+        <div class="list-block media-list">
+            <ul id="iptvList">
             </ul>
         </div>
     </div>
@@ -253,7 +271,7 @@
                 console.log("Pause Event Response");
                 console.log(response);
                 if (response)
-                    $.toast(response.responseText)
+                    $.toast(response.responseText);
                 else
                     $.toast("请求暂停播放失败，此为系统错误，将长期存在");
             });
@@ -310,7 +328,24 @@
                 else
                     $.toast("请求终止播放失败，此为系统错误，将长期存在");
             });
-        }
+        },
+		iptvClick: function (){
+			$.getJSON("iptv.json?callback=?",function(data){
+				console.log(data);
+			});
+		},
+		iptvItemClick: function(event){
+			var title = event.data.title;
+			var url = event.data.url;
+			
+			Functions.sendMessage({action: "iptv", url: url},function (response){
+				console.log(response);
+				if (response)
+					$.toast(response.responseText);
+				else
+					$.toast("请求点播IPTV失败，失败原因见Console");
+			});
+		}
     };
     var Functions = {
         addItem: function (imageUrl, title, afterTitle, subTitle, titleText) {
@@ -418,13 +453,28 @@
                 headers: {"Content-Type": "application/x-www-form-urlencoded ; charset=utf-8"},
                 complete: callback
             });
-        }
+        },
+		processIPTV: function (json){
+			Elements.iptvList.html("");
+			for(var index in json){
+				var title = json[index].title;
+				var url = json[index].url;
+				var img = json[index].img;
+				//function (imageUrl, title, afterTitle, subTitle, titleText)
+				var li = Functions.addItem(img, title, "", "", "");
+				
+				li.find("a")[0].href = "#";
+				li.bind("click",{title : title, url : url}, Events.iptvItemClick);
+				li.appendTo(Elements.iptvList);
+			}
+		}
     };
     var Elements = {
         listUl: $("#list"),
         searchText: $("#search"),
         albumListUl: $("#albumList"),
-        playlistUl: $("#playlist")
+        playlistUl: $("#playlist"),
+		iptvList: $("#iptvList")
     }
     $(document).ready(function () {
         //Functions.addItem("http://pic7.qiyipic.com/image/20151126/f9/7a/v_109762650_m_601.jpg", "《爱情公寓》陈赫连夜说服 李金铭含泪回归", "爱奇艺", "副标题", "说明文字");

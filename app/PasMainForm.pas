@@ -62,6 +62,7 @@ type
     httpSrv: TIdHttpServerEx;
     voice: OleVariant;
     flagPreNext: Boolean;
+    flagIPTV: Boolean;
     // webRoot: string; // 点播页面绝对路径
     httpServerUri: string; // 本地HTTP服务绝对路径
     procedure drawQrCode; // 绘制点播页面URL 二维码
@@ -79,7 +80,7 @@ implementation
 
 uses
   CnDebug, EncdDecd, System.JSON, PasGlobalConfiguration,
-  PasPlayActionProcessor, PasYoutubedlHelper,
+  PasPlayActionProcessor, PasYoutubedlHelper, PasIptvProcessor,
   PasPlayerListProcessor, PasLibVlcUserData, PasVideoTransferProcessor,
   PasWebSrvProcessor, PasPlayControlProcessor, PasLibVlcClassUnit,
   PasUpdateProcessor, PasDebugProcessor;
@@ -116,26 +117,16 @@ begin
     FM_PLAY:
       begin
         if msg.LParam = 0 then
-          pslbvlcmdlst1.Play
+          if Self.flagIPTV then
+            player.Resume
+          else
+            pslbvlcmdlst1.Play
         else
         begin
-          {
-            pStr := Pointer(msg.LParam);
-            JSON := TJSONObject.ParseJSONValue(pStr) as TJSONObject;
-            str := Format('%s?action=vlc&base64=%s',
-            [httpServerUri, EncdDecd.EncodeString(pStr).Replace(#10,
-            '').Replace(#13, '')]);
-          }
+          Self.flagIPTV := False;
           userData := Pointer(msg.LParam);
           media := pslbvlcmdlst1.CreateMedia(httpServerUri + userData.LocalUrl);
-          {
-            userData := TLibVlcUserData.Create;
-            userData.SrcUrl := JSON.Values['url'].Value;
-            userData.LocalUrl := str;
-            userData.Referer := JSON.Values['extractor'].Value;
-            userData.Title := JSON.Values['title'].Value;
-            userData.PlayStatus := PS_WAIT_PLAY;
-          }
+
           media.SetUserData(userData);
           pslbvlcmdlst1.Add(media);
 
@@ -159,6 +150,15 @@ begin
       Application.Terminate;
     FM_LIST:
       msg.Result := DWORD(Pointer(pslbvlcmdlst1));
+    FM_IPTV:
+      begin
+        Self.flagIPTV := True;
+        pStr := Pointer(msg.LParam);
+        // pslbvlcmdlst1.Pause;
+        player.Stop;
+        player.Play(pStr);
+        CnDebugger.TraceMsg('iptv:' + pStr);
+      end;
   end;
   CnDebugger.TraceLeave('messageProcessor', Self.ClassName);
 end;
@@ -237,6 +237,7 @@ begin
     IP := '127.0.0.1';
     Port := 80;
   end;
+  Self.FormStyle := fsNormal;
 {$ENDIF}
   // random port
   with httpSrv.Bindings.Add do
@@ -249,6 +250,7 @@ begin
   httpSrv.registerProcessor(TPlayControlProcessor.Create);
   httpSrv.registerProcessor(TPlayActionProcessor.Create);
   httpSrv.registerProcessor(TPlayAction2Processor.Create);
+  httpSrv.registerProcessor(TIPTVProcessor.Create);
   httpSrv.registerProcessor(TPlayerListProcessor.Create);
   httpSrv.registerProcessor(TVideoTransferProcessor.Create);
   httpSrv.registerProcessor(TWebSrvProcessor.Create);
@@ -422,7 +424,8 @@ begin
   // 根据剩余的播放时间，预先计算下一个播放地址
   current := player.GetVideoPosInMs;
   total := player.GetVideoLenInMs;
-  if Self.flagPreNext and (total - current < bufferTimeout) then
+  if (not Self.flagIPTV) and Self.flagPreNext and
+    (total - current < bufferTimeout) then
   begin
     Self.flagPreNext := False;
     CnDebugger.TraceMsg('Pre-Calc Next Url');

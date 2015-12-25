@@ -1,4 +1,4 @@
-unit PasMessagerHelper;
+﻿unit PasMessagerHelper;
 
 interface
 
@@ -31,6 +31,7 @@ const
   FM_SHUTDOWN = WM_FORDREAM + 8; // 关机
   FM_LIST = WM_FORDREAM + 10; // 显示播放列表
   FM_CLOSE_APP = WM_FORDREAM + 11; // 关闭应用 for test
+  FM_IPTV = WM_FORDREAM + 12; // IPTV
   // PS -> Play Status
   PS_WAIT_PLAY = 0; // 等待播放
   PS_PLAYING = 1; // 正在播放

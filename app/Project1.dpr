@@ -1,6 +1,7 @@
 ﻿program Project1;
 
 uses
+  FastMMMemLeakMonitor,
   Vcl.Forms,
   PasMainForm in 'PasMainForm.pas' {frmMain},
   PasLibVlcClassUnit in 'LibVlcEx\PasLibVlcClassUnit.pas',
@@ -22,7 +23,8 @@ uses
   PasDebugProcessor in 'IdHttpServerEx\PasDebugProcessor.pas',
   PasPlayerListProcessor in 'IdHttpServerEx\PasPlayerListProcessor.pas',
   PasLibVlcUserData in 'LibVlcEx\PasLibVlcUserData.pas',
-  PasYoutubedlHelper in 'Util\PasYoutubedlHelper.pas';
+  PasYoutubedlHelper in 'Util\PasYoutubedlHelper.pas',
+  PasIptvProcessor in 'IdHttpServerEx\PasIptvProcessor.pas';
 
 {$R *.res}
 
